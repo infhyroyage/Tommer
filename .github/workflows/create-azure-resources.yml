@@ -1,0 +1,30 @@
+name: Create Azure Resources
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/create-azure-resources.yml
+
+env:
+  LOCATION: japaneast
+  RESOURCE_GROUP: tommer-je
+
+jobs:
+  create-resources:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+
+      - name: Login Azure as Contributor
+        uses: azure/login@v1
+        with:
+          creds: '{"clientId":"${{ vars.AZURE_AD_SP_CONTRIBUTOR_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_AD_SP_CONTRIBUTOR_CLIENT_SECRET }}","subscriptionId":"${{ vars.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ vars.AZURE_TENANT_ID }}"}'
+
+      - name: Create Resource Group if Needed
+        run: |
+          az group create \
+            -n ${{ env.RESOURCE_GROUP }} \
+            -l ${{ env.LOCATION }}
