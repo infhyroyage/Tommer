@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - .github/workflows/create-azure-resources.yml
+      - .github/workflows/create-azure-resources.yaml
 
 env:
   LOCATION: japaneast
