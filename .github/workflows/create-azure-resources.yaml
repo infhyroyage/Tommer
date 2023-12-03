@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - .github/workflows/create-azure-resources.yaml
-      - resources**
+      - resources.bicep
 
 jobs:
   create-resources:
@@ -20,15 +20,17 @@ jobs:
         with:
           creds: '{"clientId":"${{ vars.AZURE_AD_SP_CONTRIBUTOR_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_AD_SP_CONTRIBUTOR_CLIENT_SECRET }}","subscriptionId":"${{ vars.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ vars.AZURE_TENANT_ID }}"}'
 
-      - name: Create Resource Group if Needed
+      - name: Create Azure Resource Group if Needed
         run: |
           az group create \
             -n ${{ vars.AZURE_RESOURCE_GROUP }} \
             -l ${{ vars.AZURE_LOCATION }}
 
-      - name: Deploy Storage Account
+      - name: Deploy Azure Resources
         run: |
           az deployment group create \
             --resource-group ${{ vars.AZURE_RESOURCE_GROUP }} \
-            --template-file resources/storage.bicep \
-            --parameters storageName=${{ vars.AZURE_STORAGE }} location=${{ vars.AZURE_LOCATION }}
+            --template-file resources.bicep \
+            --parameters \
+              location=${{ vars.AZURE_LOCATION }} \
+              storageName=${{ vars.AZURE_STORAGE }}

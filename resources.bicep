@@ -1,5 +1,5 @@
-param storageName string
 param location string
+param storageName string
 
 // Deploy Storage Account
 resource storage 'Microsoft.Storage/storageAccounts@2021-04-01' = {
