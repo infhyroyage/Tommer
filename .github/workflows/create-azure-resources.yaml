@@ -6,10 +6,7 @@ on:
       - main
     paths:
       - .github/workflows/create-azure-resources.yaml
-
-env:
-  LOCATION: japaneast
-  RESOURCE_GROUP: tommer-je
+      - resources**
 
 jobs:
   create-resources:
@@ -26,5 +23,12 @@ jobs:
       - name: Create Resource Group if Needed
         run: |
           az group create \
-            -n ${{ env.RESOURCE_GROUP }} \
-            -l ${{ env.LOCATION }}
+            -n ${{ vars.AZURE_RESOURCE_GROUP }} \
+            -l ${{ vars.AZURE_LOCATION }}
+
+      - name: Deploy Storage Account
+        run: |
+          az deployment group create \
+            --resource-group ${{ vars.AZURE_RESOURCE_GROUP }} \
+            --template-file resources/storage.bicep \
+            --parameters storageName=${{ vars.AZURE_STORAGE }} location=${{ vars.AZURE_LOCATION }}
