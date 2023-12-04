@@ -32,5 +32,6 @@ jobs:
             --resource-group ${{ vars.AZURE_RESOURCE_GROUP }} \
             --template-file resources.bicep \
             --parameters \
+              functions=${{ vars.AZURE_FUNCTIONS }} \
               location=${{ vars.AZURE_LOCATION }} \
               storageName=${{ vars.AZURE_STORAGE }}
