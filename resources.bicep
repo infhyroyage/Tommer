@@ -1,10 +1,11 @@
 // Parameters
 param functionsName string
+param insightsName string
 param location string
 param storageName string
 
 // Deploy Storage Account
-resource storage 'Microsoft.Storage/storageAccounts@2021-04-01' = {
+resource storage 'Microsoft.Storage/storageAccounts@2022-09-01' = {
   name: storageName
   location: location
   sku: {
@@ -14,11 +15,11 @@ resource storage 'Microsoft.Storage/storageAccounts@2021-04-01' = {
 }
 
 // Deploy "last-updated" Container of BLOB Storage
-resource blob 'Microsoft.Storage/storageAccounts/blobServices@2021-04-01' = {
+resource blob 'Microsoft.Storage/storageAccounts/blobServices@2022-09-01' = {
   name: 'default'
   parent: storage
 }
-resource container 'Microsoft.Storage/storageAccounts/blobServices/containers@2021-04-01' = {
+resource container 'Microsoft.Storage/storageAccounts/blobServices/containers@2022-09-01' = {
   parent: blob
   name: 'last-updated'
   properties: {
@@ -26,8 +27,18 @@ resource container 'Microsoft.Storage/storageAccounts/blobServices/containers@20
   }
 }
 
+// Deploy Application Insights
+resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
+  name: insightsName
+  location: location
+  kind: 'web'
+  properties: {
+    Application_Type: 'web'
+  }
+}
+
 // Deploy Azure Functions
-resource functionsPlan 'Microsoft.Web/serverfarms@2021-01-01' = {
+resource functionsPlan 'Microsoft.Web/serverfarms@2022-09-01' = {
   name: functionsName
   location: location
   sku: {
@@ -35,7 +46,7 @@ resource functionsPlan 'Microsoft.Web/serverfarms@2021-01-01' = {
     tier: 'Dynamic'
   }
 }
-resource functions 'Microsoft.Web/sites@2021-01-01' = {
+resource functions 'Microsoft.Web/sites@2022-09-01' = {
   name: functionsName
   location: location
   kind: 'functionapp'
@@ -66,7 +77,12 @@ resource functions 'Microsoft.Web/sites@2021-01-01' = {
         {
           name: 'WEBSITE_NODE_DEFAULT_VERSION'
           value: '~20'
-        }      ]
+        }
+        {
+          name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
+          value: appInsights.properties.InstrumentationKey
+        }
+      ]
     }
   }
 }
