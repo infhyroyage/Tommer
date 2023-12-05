@@ -5,3 +5,14 @@
 ```
 az ad sp create-for-rbac --name Tommer_Contributor --role Contributor --scope /subscriptions/{Subscription ID}
 ```
+
+local.settings.json
+
+```json
+{
+  "IsEncrypted": false,
+  "Values": {
+    "FUNCTIONS_WORKER_RUNTIME": "node"
+  }
+}
+```
