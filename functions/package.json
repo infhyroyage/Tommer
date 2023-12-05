@@ -4,9 +4,8 @@
   "main": "dist/src/index.js",
   "scripts": {
     "build": "tsc",
-    "watch": "tsc -w",
     "prestart": "npm run build",
-    "start": "func start",
+    "start": "func start --verbose",
     "test": "echo \"No tests yet...\""
   },
   "dependencies": {
