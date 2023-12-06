@@ -1,0 +1,80 @@
+name: Build and Deploy Azure Functions Application
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/build-deploy-functions-app.yaml
+      - functions**
+
+env:
+  NODE_VERSION: "20.10.0"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+
+      - name: Setup Node ${{ env.NODE_VERSION }} Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Restore cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-tommer-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
+          restore-keys: ${{ runner.os }}-tommer-${{ hashFiles('**/package-lock.json') }}-
+
+      - name: Install dependencies
+        run: |
+          pushd functions
+          npm ci
+          popd
+
+      - name: Build
+        run: |
+          pushd functions
+          npm run build
+          popd
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ vars.AZURE_FUNCTIONS }}
+          path: |
+            functions/dist
+            functions/host.json
+            functions/package.json
+            !functions/node_modules
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ vars.AZURE_FUNCTIONS }}
+
+      - name: Setup Node ${{ env.NODE_VERSION }} Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install Production Only
+        run: npm install --production
+
+      - name: Login Azure as Contributor
+        uses: azure/login@v1
+        with:
+          creds: '{"clientId":"${{ vars.AZURE_AD_SP_CONTRIBUTOR_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_AD_SP_CONTRIBUTOR_CLIENT_SECRET }}","subscriptionId":"${{ vars.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ vars.AZURE_TENANT_ID }}"}'
+
+      - name: Deploy Azure Functions Application
+        uses: Azure/functions-action@v1.5.1
+        with:
+          app-name: ${{ vars.AZURE_FUNCTIONS }}
+          package: .
