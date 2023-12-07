@@ -6,11 +6,11 @@
     "build": "tsc",
     "prestart": "npm run build",
     "start": "func start --verbose",
-    "test": "echo \"No tests yet...\""
+    "test": "echo \"No tests yet...\"",
+    "watch": "tsc -w"
   },
   "dependencies": {
-    "@azure/functions": "^4.1.0",
-    "axios": "^1.6.2"
+    "@azure/functions": "^4.1.0"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
