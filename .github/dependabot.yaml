@@ -5,11 +5,27 @@
 
 version: 2
 updates:
+  - package-ecosystem: "npm"
+    directory: "/functions"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "10:00"
+      timezone: "Asia/Tokyo"
+    assignees:
+      - "infhyroyage"
+    ignore:
+      - dependency-name: "@types/node"
+      - dependency-name: "typescript"
+    labels: []
+    reviewers:
+      - "infhyroyage"
+
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
-      day: "Monday"
+      day: "monday"
       time: "11:00"
       timezone: "Asia/Tokyo"
     assignees:
