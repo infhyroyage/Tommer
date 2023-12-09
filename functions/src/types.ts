@@ -4,8 +4,9 @@
 export type PutUcsRecentReq = {
   /**
    * UCS Number per Maker
+   * null for initial UCS Number
    */
-  [maker: string]: number;
+  [maker: string]: number | null;
 };
 
 /**

@@ -18,7 +18,7 @@ export async function putUcsRecent(
     return { status: 400 };
   }
   for (const maker in req) {
-    if (typeof req[maker] !== "number") {
+    if (req[maker] !== null && typeof req[maker] !== "number") {
       return { status: 400 };
     }
   }
