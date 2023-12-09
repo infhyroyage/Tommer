@@ -3,60 +3,88 @@ import {
   HttpResponseInit,
   InvocationContext,
 } from "@azure/functions";
-import { Ucs } from "./types";
-import { Browser, BrowserContext, Page, chromium } from "playwright-chromium";
+import { PutUcsRecentReq, PutUcsRecentRes, Ucs } from "./types";
+import { Browser, Page, chromium } from "playwright-chromium";
 
 export async function putUcsRecent(
   request: HttpRequest,
   context: InvocationContext
 ): Promise<HttpResponseInit> {
-  const body: any = await request.json();
-  context.info({ body });
+  const req: PutUcsRecentReq = (await request.json()) as PutUcsRecentReq;
+  context.info({ req });
 
   // Validation
-  if (body === null || typeof body !== "object") {
+  if (req === null || typeof req !== "object") {
     return { status: 400 };
   }
-  for (const key in body) {
-    if (
-      typeof body[key] !== "object" ||
-      typeof body[key].no !== "number" ||
-      typeof body[key].name !== "string" ||
-      typeof body[key].upload !== "string"
-    ) {
+  for (const maker in req) {
+    if (typeof req[maker] !== "number") {
       return { status: 400 };
     }
   }
 
-  // const req: PutUcsRecent = { ...body };
+  // Scrape Recent UCS and Update Response body per UCS Maker
+  const next: PutUcsRecentReq = {};
+  const notification: { [maker: string]: Ucs } = {};
   const browser: Browser = await chromium.launch({ headless: true });
   try {
-    const browserContext: BrowserContext = await browser.newContext();
-    const page: Page = await browserContext.newPage();
-    await page.goto(
-      "https://ucs.piugame.com/ucs_share?s_type=maker&s_val=KE1DY"
-    );
+    for (const maker of Object.keys(req)) {
+      // Scraping
+      const page: Page = await (await browser.newContext()).newPage();
+      await page.goto(
+        `https://ucs.piugame.com/ucs_share?s_type=maker&s_val=${maker}`
+      );
+      const tbody = await page.$("tbody");
+      if (tbody === null) {
+        context.warn(`[maker: ${maker}] tbody is null.`);
+        continue;
+      }
+      const recentTr = await tbody.$("tr");
+      if (recentTr === null) {
+        context.warn(`[maker: ${maker}] tr is null.`);
+        continue;
+      }
+      const recentTdNo = await recentTr.$("td.w_no.ucsShare");
+      if (recentTdNo === null) {
+        context.warn(`[maker: ${maker}] td.w_no.ucsShare is null.`);
+        continue;
+      }
+      const recentPName = await recentTr.$("p.t1");
+      if (recentPName === null) {
+        context.warn(`[maker: ${maker}] p.t1 is null.`);
+        continue;
+      }
+      const recentTdUpload = await recentTr.$("td.w_upload");
+      if (recentTdUpload === null) {
+        context.warn(`[maker: ${maker}] td.w_upload is null.`);
+        continue;
+      }
+      const no: number = Number(await recentTdNo.innerText());
+      if (Number.isNaN(no)) {
+        context.warn(`[maker: ${maker}] Variable "no" is NaN.`);
+        continue;
+      }
+      const name: string = await recentPName.innerText();
+      if (name === "") {
+        context.warn(`[maker: ${maker}] Variable "name" is empty.`);
+        continue;
+      }
+      const upload: string = await recentTdUpload.innerText();
+      if (upload === "") {
+        context.warn(`[maker: ${maker}] Variable "upload" is empty.`);
+        continue;
+      }
 
-    const tbody = await page.$("tbody");
-    if (tbody === null) return { jsonBody: {} };
+      // Updating
+      next[maker] = no;
+      if (req[maker] !== no) {
+        notification[maker] = { no, name, upload };
+      }
+    }
 
-    const recentTr = await tbody.$("tr");
-    if (recentTr === null) return { jsonBody: {} };
-
-    const recentTdNo = await recentTr.$("td.w_no.ucsShare");
-    const recentPName = await recentTr.$("p.t1");
-    const recentTdUpload = await recentTr.$("td.w_upload");
-    if (recentTdNo === null || recentPName === null || recentTdUpload === null)
-      return { jsonBody: {} };
-
-    const no: number = Number(await recentTdNo.innerText());
-    const name: string = await recentPName.innerText();
-    const upload: string = await recentTdUpload.innerText();
-    const recentUcs: Ucs = { no, name, upload };
-
-    return { jsonBody: { KE1DY: recentUcs } };
+    const res: PutUcsRecentRes = { next, notification };
+    return { status: 200, jsonBody: res };
   } finally {
-    context.info("CLOSE");
     await browser.close();
   }
 }
