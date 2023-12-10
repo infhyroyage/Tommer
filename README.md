@@ -16,3 +16,14 @@ local.settings.json
   }
 }
 ```
+
+next.json
+
+```json
+[
+  {
+    "maker": "maker",
+    "no": -1
+  }
+]
+```
