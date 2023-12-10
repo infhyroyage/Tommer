@@ -3,10 +3,16 @@
  */
 export type PutUcsRecentReq = {
   /**
-   * UCS Number per Maker
+   * UCS Maker Name
    */
-  [maker: string]: number;
-};
+  maker: string;
+
+  /**
+   * UCS Number
+   * -1 for initial value
+   */
+  no: number;
+}[];
 
 /**
  * Response body of [PUT] /ucs/recent
@@ -18,17 +24,20 @@ export type PutUcsRecentRes = {
   next: PutUcsRecentReq;
 
   /**
-   * Recent UCS List to Notificate by Azure Logic Apps
+   * UCS List for Notification
    */
-  notification: {
-    [maker: string]: Ucs;
-  };
+  notifications: Ucs[];
 };
 
 /**
  * UCS
  */
 export type Ucs = {
+  /**
+   * UCS Maker Name
+   */
+  maker: string;
+
   /**
    * UCS Number
    */

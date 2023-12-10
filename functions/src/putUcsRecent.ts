@@ -14,22 +14,27 @@ export async function putUcsRecent(
   context.info({ req });
 
   // Validation
-  if (req === null || typeof req !== "object") {
+  if (!Array.isArray(req)) {
     return { status: 400 };
   }
-  for (const maker in req) {
-    if (typeof req[maker] !== "number") {
+  for (const r of req) {
+    if (
+      Object.keys(r).some((key) => !["maker", "no"].includes(key)) ||
+      typeof r.maker !== "string" ||
+      typeof r.no !== "number"
+    ) {
       return { status: 400 };
     }
   }
 
   // Scrape Recent UCS and Update Response body per UCS Maker
-  const next: PutUcsRecentReq = {};
-  const notification: { [maker: string]: Ucs } = {};
+  const next: PutUcsRecentReq = [];
+  const notifications: Ucs[] = [];
   const browser: Browser = await chromium.launch({ headless: true });
   try {
-    for (const maker of Object.keys(req)) {
+    for (const r of req) {
       // Scraping
+      const maker: string = r.maker;
       const page: Page = await (await browser.newContext()).newPage();
       await page.goto(
         `https://ucs.piugame.com/ucs_share?s_type=maker&s_val=${maker}`
@@ -76,13 +81,13 @@ export async function putUcsRecent(
       }
 
       // Updating
-      next[maker] = no;
-      if (req[maker] !== no) {
-        notification[maker] = { no, name, upload };
+      next.push({ maker, no });
+      if (no !== r.no) {
+        notifications.push({ maker, no, name, upload });
       }
     }
 
-    const res: PutUcsRecentRes = { next, notification };
+    const res: PutUcsRecentRes = { next, notifications };
     return { status: 200, jsonBody: res };
   } finally {
     await browser.close();
