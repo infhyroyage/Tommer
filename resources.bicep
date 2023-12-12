@@ -89,7 +89,7 @@ resource functions 'Microsoft.Web/sites@2022-09-01' = {
 }
 
 // Deploy API Connection
-resource apiConnection 'Microsoft.Web/connections@2016-06-01' = {
+resource apiConnectionAzureBlob 'Microsoft.Web/connections@2016-06-01' = {
   name: apiConnAzureblobName
   location: location
   properties: {
@@ -104,8 +104,12 @@ resource apiConnection 'Microsoft.Web/connections@2016-06-01' = {
     testLinks: [
       {
         method: 'get'
-        requestUri: '${environment().resourceManager}subscriptions/${subscription().subscriptionId}/resourceGroups/${resourceGroup().name}/providers/Microsoft.Web/connections/azureblob/extensions/proxy/testconnection?api-version=2016-06-01'
+        // As of December 13, 2023, the URL of Azure Management API cannot be obtained dynamically, so 'management.azure.com' is hardcoded
+        #disable-next-line no-hardcoded-env-urls
+        requestUri: 'https://management.azure.com:443/subscriptions/${subscription().subscriptionId}/resourceGroups/${resourceGroup().name}/providers/Microsoft.Web/connections/azureblob/extensions/proxy/testconnection?api-version=2016-06-01'
       }
     ]
   }
 }
+
+output environmentOutput object = environment()
