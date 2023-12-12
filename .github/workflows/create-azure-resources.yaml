@@ -33,6 +33,7 @@ jobs:
             --template-file resources.bicep \
             --parameters \
               apiConnAzureblobName=${{ vars.AZURE_API_CONNECTION_AZUREBLOB }} \
+              apiConnOutlookName=${{ vars.AZURE_API_CONNECTION_OUTLOOK }} \
               functionsName=${{ vars.AZURE_FUNCTIONS }} \
               insightsName=${{ vars.AZURE_APPLICATION_INSIGHTS }} \
               location=${{ vars.AZURE_LOCATION }} \
