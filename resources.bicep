@@ -1,4 +1,5 @@
 // Parameters
+param apiConnStorageName string
 param functionsName string
 param insightsName string
 param location string
@@ -84,5 +85,27 @@ resource functions 'Microsoft.Web/sites@2022-09-01' = {
         }
       ]
     }
+  }
+}
+
+// Deploy API Connection
+resource apiConnection 'Microsoft.Web/connections@2016-06-01' = {
+  name: apiConnStorageName
+  location: location
+  properties: {
+    api: {
+      id: resourceId('Microsoft.Web/locations/managedApis', '${location}', 'azureblob')
+    }
+    displayName: apiConnStorageName
+    // parameterValues: {
+    //   accountName: storageName
+    //   accessKey: storage.listKeys().keys[0].value
+    // }
+    testLinks: [
+      {
+        method: 'get'
+        requestUri: '${environment().resourceManager}subscriptions/${subscription().subscriptionId}/resourceGroups/${resourceGroup().name}/providers/Microsoft.Web/connections/azureblob/extensions/proxy/testconnection?api-version=2016-06-01'
+      }
+    ]
   }
 }
