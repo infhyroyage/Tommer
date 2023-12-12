@@ -97,10 +97,10 @@ resource apiConnectionAzureBlob 'Microsoft.Web/connections@2016-06-01' = {
       id: subscriptionResourceId('Microsoft.Web/locations/managedApis', location, 'azureblob')
     }
     displayName: apiConnAzureblobName
-    // parameterValues: {
-    //   accountName: storageName
-    //   accessKey: storage.listKeys().keys[0].value
-    // }
+    parameterValues: {
+      accessKey: storage.listKeys().keys[0].value
+      accountName: storageName
+    }
     testLinks: [
       {
         method: 'get'
