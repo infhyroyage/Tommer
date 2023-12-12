@@ -1,5 +1,5 @@
 // Parameters
-param apiConnStorageName string
+param apiConnAzureblobName string
 param functionsName string
 param insightsName string
 param location string
@@ -90,13 +90,13 @@ resource functions 'Microsoft.Web/sites@2022-09-01' = {
 
 // Deploy API Connection
 resource apiConnection 'Microsoft.Web/connections@2016-06-01' = {
-  name: apiConnStorageName
+  name: apiConnAzureblobName
   location: location
   properties: {
     api: {
       id: resourceId('Microsoft.Web/locations/managedApis', '${location}', 'azureblob')
     }
-    displayName: apiConnStorageName
+    displayName: apiConnAzureblobName
     // parameterValues: {
     //   accountName: storageName
     //   accessKey: storage.listKeys().keys[0].value

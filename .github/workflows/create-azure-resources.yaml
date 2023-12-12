@@ -32,6 +32,7 @@ jobs:
             --resource-group ${{ vars.AZURE_RESOURCE_GROUP }} \
             --template-file resources.bicep \
             --parameters \
+              apiConnAzureblobName=${{ vars.AZURE_API_CONNECTION_AZUREBLOB }}
               functionsName=${{ vars.AZURE_FUNCTIONS }} \
               insightsName=${{ vars.AZURE_APPLICATION_INSIGHTS }} \
               location=${{ vars.AZURE_LOCATION }} \
