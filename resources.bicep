@@ -94,7 +94,7 @@ resource apiConnectionAzureBlob 'Microsoft.Web/connections@2016-06-01' = {
   location: location
   properties: {
     api: {
-      id: resourceId('Microsoft.Web/locations/managedApis', '${location}', 'azureblob')
+      id: subscriptionResourceId('Microsoft.Web/locations/managedApis', location, 'azureblob')
     }
     displayName: apiConnAzureblobName
     // parameterValues: {
