@@ -3,8 +3,9 @@ param apiConnAzureblobName string
 param apiConnOutlookName string
 param functionsName string
 param insightsName string
-param location string
 param storageName string
+
+param location string = resourceGroup().location
 
 // Deploy Storage Account
 resource storage 'Microsoft.Storage/storageAccounts@2022-09-01' = {
@@ -105,9 +106,7 @@ resource apiConnAzureBlob 'Microsoft.Web/connections@2016-06-01' = {
     testLinks: [
       {
         method: 'get'
-        // As of December 13, 2023, the URL of Azure Management API cannot be obtained dynamically, so 'management.azure.com' is hardcoded
-        #disable-next-line no-hardcoded-env-urls
-        requestUri: 'https://management.azure.com:443/subscriptions/${subscription().subscriptionId}/resourceGroups/${resourceGroup().name}/providers/Microsoft.Web/connections/azureblob/extensions/proxy/testconnection?api-version=2016-06-01'
+        requestUri: '${environment().gallery}:443/subscriptions/${subscription().subscriptionId}/resourceGroups/${resourceGroup().name}/providers/Microsoft.Web/connections/azureblob/extensions/proxy/testconnection?api-version=2016-06-01'
       }
     ]
   }
@@ -123,9 +122,7 @@ resource apiConnOutlook 'Microsoft.Web/connections@2016-06-01' = {
     testLinks: [
       {
         method: 'get'
-        // As of December 13, 2023, the URL of Azure Management API cannot be obtained dynamically, so 'management.azure.com' is hardcoded
-        #disable-next-line no-hardcoded-env-urls
-        requestUri: 'https://management.azure.com:443/subscriptions/${subscription().subscriptionId}/resourceGroups/${resourceGroup().name}/providers/Microsoft.Web/connections/outlook/extensions/proxy/testconnection?api-version=2016-06-01'
+        requestUri: '${environment().gallery}:443/subscriptions/${subscription().subscriptionId}/resourceGroups/${resourceGroup().name}/providers/Microsoft.Web/connections/outlook/extensions/proxy/testconnection?api-version=2016-06-01'
       }
     ]
   }
