@@ -4,7 +4,11 @@ param apiConnOutlookName string
 param functionsName string
 param insightsName string
 param location string
+param spContributorClientId string
+@secure()
+param spContributorClientSecret string
 param storageName string
+param tenantId string
 
 // Deploy Storage Account
 resource storage 'Microsoft.Storage/storageAccounts@2022-09-01' = {
@@ -120,6 +124,12 @@ resource apiConnOutlook 'Microsoft.Web/connections@2016-06-01' = {
       id: subscriptionResourceId('Microsoft.Web/locations/managedApis', location, 'outlook')
     }
     displayName: apiConnOutlookName
+    parameterValues: {
+      'token:clientId': spContributorClientId
+      'token:clientSecret': spContributorClientSecret
+      'token:TenantId': tenantId
+      'token:grantType': 'client_credentials'
+    }
     testLinks: [
       {
         method: 'get'
