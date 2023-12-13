@@ -38,6 +38,6 @@ jobs:
               insightsName=${{ vars.AZURE_APPLICATION_INSIGHTS }} \
               location=${{ vars.AZURE_LOCATION }} \
               spContributorClientId=${{ vars.AZURE_AD_SP_CONTRIBUTOR_CLIENT_ID }} \
-              spContributorClientSecret=${{ secrets.AZURE_AD_SP_CONTRIBUTOR_CLIENT_SECRET }}
+              spContributorClientSecret=${{ secrets.AZURE_AD_SP_CONTRIBUTOR_CLIENT_SECRET }} \
               storageName=${{ vars.AZURE_STORAGE }} \
               tenantId=${{ vars.AZURE_TENANT_ID }}
