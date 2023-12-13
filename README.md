@@ -17,13 +17,15 @@ local.settings.json
 }
 ```
 
-next.json
+prev.json
 
 ```json
 [
   {
     "maker": "maker",
-    "no": -1
+    "no": 0,
+    "name": "name",
+    "upload": "upload"
   }
 ]
 ```
