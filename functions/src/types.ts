@@ -5,28 +5,27 @@ export type PutUcsRecentReq = {
   /**
    * UCS Maker Name
    */
-  maker: string;
+  makers: string[];
 
   /**
-   * UCS Number
-   * -1 for initial value
+   * Recent UCS List at Previous Execution
    */
-  no: number;
-}[];
+  prev: Ucs[];
+};
 
 /**
  * Response body of [PUT] /ucs/recent
  */
 export type PutUcsRecentRes = {
   /**
-   * Request Body of [PUT] /ucs/recent for Next Execution
+   * Recent UCS List at this Execution
    */
-  next: PutUcsRecentReq;
+  recent: Ucs[];
 
   /**
-   * UCS List for Notification
+   * Notification UCS List
    */
-  notifications: Ucs[];
+  notification: Ucs[];
 };
 
 /**
