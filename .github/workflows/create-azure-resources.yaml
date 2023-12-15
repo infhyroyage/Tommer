@@ -26,6 +26,11 @@ jobs:
             -n ${{ vars.AZURE_RESOURCE_GROUP }} \
             -l ${{ vars.AZURE_LOCATION }}
 
+      - name: Get email
+        run: |
+          EMAIL=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/users/${{ github.actor }} | jq .email -r)
+          echo $EMAIL
+      # echo "ACTOR_EMAIL=$EMAIL" >> $GITHUB_ENV
       - name: Deploy Azure Resources
         run: |
           az deployment group create \
