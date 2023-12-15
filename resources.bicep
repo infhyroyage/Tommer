@@ -136,7 +136,7 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
     definition: {
       '$schema': 'https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#'
       actions: {
-        'Initialize makers': {
+        'Set makers': {
           inputs: {
             variables: [
               {
@@ -144,6 +144,38 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
                 type: 'array'
                 value: []
               }
+            ]
+          }
+          type: 'InitializeVariable'
+        }
+        'Set mail': {
+          inputs: {
+            variables: [
+              {
+                name: 'mail'
+                type: 'string'
+                value: ''
+              }
+            ]
+          }
+          type: 'InitializeVariable'
+        }
+        'Initialize Previous UCS List': {
+          inputs: {
+            variables: [
+              {
+                name: 'prev'
+                type: 'array'
+                value: []
+              }
+            ]
+          }
+          runAfter: {
+            'Set makers': [
+              'Succeeded'
+            ]
+            'Set mail': [
+              'Succeeded'
             ]
           }
           type: 'InitializeVariable'
