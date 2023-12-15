@@ -16,16 +16,3 @@ local.settings.json
   }
 }
 ```
-
-prev.json
-
-```json
-[
-  {
-    "maker": "maker",
-    "no": 0,
-    "name": "name",
-    "upload": "upload"
-  }
-]
-```
