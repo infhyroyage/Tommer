@@ -3,6 +3,7 @@ param apiConnAzureblobName string
 param apiConnOutlookName string
 param functionsName string
 param insightsName string
+param logicAppName string
 param storageName string
 
 param location string = resourceGroup().location
@@ -90,7 +91,7 @@ resource functions 'Microsoft.Web/sites@2022-09-01' = {
   }
 }
 
-// Deploy API Connection
+// Deploy Logic App
 resource apiConnAzureBlob 'Microsoft.Web/connections@2016-06-01' = {
   name: apiConnAzureblobName
   location: location
@@ -125,5 +126,39 @@ resource apiConnOutlook 'Microsoft.Web/connections@2016-06-01' = {
         requestUri: '${environment().gallery}:443/subscriptions/${subscription().subscriptionId}/resourceGroups/${resourceGroup().name}/providers/Microsoft.Web/connections/outlook/extensions/proxy/testconnection?api-version=2016-06-01'
       }
     ]
+  }
+}
+resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
+  name: logicAppName
+  location: location
+  properties: {
+    parameters: {}
+    definition: {
+      '$schema': 'https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#'
+      actions: {
+        'Initialize makers': {
+          inputs: {
+            variables: [
+              {
+                name: 'makers'
+                type: 'array'
+                value: []
+              }
+            ]
+          }
+          type: 'InitializeVariable'
+        }
+      }
+      triggers: {
+        Recurrence: {
+          recurrence: {
+            frequency: 'Hour'
+            interval: 6
+          }
+          type: 'Recurrence'
+        }
+      }
+    }
+    state: 'Enabled'
   }
 }

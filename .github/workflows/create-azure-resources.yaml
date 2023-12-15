@@ -36,4 +36,5 @@ jobs:
               apiConnOutlookName=${{ vars.AZURE_API_CONNECTION_OUTLOOK }} \
               functionsName=${{ vars.AZURE_FUNCTIONS }} \
               insightsName=${{ vars.AZURE_APPLICATION_INSIGHTS }} \
+              logicAppName=${{ vars.AZURE_LOGIC_APP }} \
               storageName=${{ vars.AZURE_STORAGE }}
