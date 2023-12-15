@@ -8,7 +8,7 @@ export type PutUcsRecentReq = {
   makers: string[];
 
   /**
-   * Recent UCS List at Previous Execution
+   * Previous UCS List
    */
   prev: Ucs[];
 };
@@ -18,7 +18,7 @@ export type PutUcsRecentReq = {
  */
 export type PutUcsRecentRes = {
   /**
-   * Recent UCS List at this Execution
+   * Recent UCS List
    */
   recent: Ucs[];
 
