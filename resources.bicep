@@ -183,7 +183,7 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
           inputs: {
             host: {
               connection: {
-                name: '@parameters(\'$connections\')[\'azureblob\'][\'connectionId\']'
+                name: '@parameters(\'$connections\')[\'apiConnAzureBlob\'][\'connectionId\']'
               }
             }
             method: 'get'
