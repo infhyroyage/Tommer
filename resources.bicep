@@ -196,6 +196,44 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
           }
           type: 'ApiConnection'
         }
+        'Check Whether There is only last-updated/prev.json': {
+          actions: {
+            'Get Content of last-updated/prev.json': {
+              inputs: {
+                host: {
+                  connection: {
+                    name: '@parameters(\'$connections\')[\'apiConnAzureBlob\'][\'connectionId\']'
+                  }
+                }
+                method: 'get'
+                path: '/v2/datasets/@{encodeURIComponent(encodeURIComponent(\'${storageName}\'))}/files/@{encodeURIComponent(encodeURIComponent(\'last-updated/prev.json\'))}/content'
+              }
+              type: 'ApiConnection'
+            }
+          }
+          expression: {
+            and: [
+              {
+                equals: [
+                  '@length(body(\'List last-updated Blobs\')?[\'value\'])'
+                  1
+                ]
+              }
+              {
+                equals: [
+                  '@body(\'List last-updated Blobs\')?[\'value\'][0][\'Name\']'
+                  1
+                ]
+              }
+            ]
+          }
+          runAfter: {
+            'List last-updated Blobs': [
+              'Succeeded'
+            ]
+          }
+          type: 'If'
+        }
       }
       parameters: {
         '$connections': {
