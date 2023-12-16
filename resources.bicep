@@ -180,6 +180,12 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
           type: 'InitializeVariable'
         }
       }
+      parameters: {
+        '$connections': {
+          defaultValue: {}
+          type: 'object'
+        }
+      }
       triggers: {
         Recurrence: {
           recurrence: {
