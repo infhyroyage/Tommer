@@ -179,6 +179,23 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
           }
           type: 'InitializeVariable'
         }
+        'List last-updated Blobs': {
+          inputs: {
+            host: {
+              connection: {
+                name: apiConnAzureBlob.id
+              }
+            }
+            method: 'get'
+            path: '/v2/datasets/@{encodeURIComponent(encodeURIComponent(\'${storageName}\'))}/foldersV2/@{encodeURIComponent(encodeURIComponent(\'last-updated\'))}'
+          }
+          runAfter: {
+            'Initialize Previous UCS List': [
+              'Succeeded'
+            ]
+          }
+          type: 'ApiConnection'
+        }
       }
       parameters: {
         '$connections': {
