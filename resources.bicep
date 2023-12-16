@@ -132,7 +132,6 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
   name: logicAppName
   location: location
   properties: {
-    parameters: {}
     definition: {
       '$schema': 'https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#'
       actions: {
@@ -188,6 +187,22 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
             interval: 6
           }
           type: 'Recurrence'
+        }
+      }
+    }
+    parameters: {
+      '$connections': {
+        value: {
+          apiConnAzureBlob: {
+            connectionId: apiConnAzureBlob.id
+            connectionName: apiConnAzureblobName
+            id: subscriptionResourceId('Microsoft.Web/locations/managedApis', location, 'azureblob')
+          }
+          apiConnOutlook: {
+            connectionId: apiConnOutlook.id
+            connectionName: apiConnOutlookName
+            id: subscriptionResourceId('Microsoft.Web/locations/managedApis', location, 'outlook')
+          }
         }
       }
     }
