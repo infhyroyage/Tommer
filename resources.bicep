@@ -283,6 +283,24 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
           }
           type: 'If'
         }
+        'Run Functions App': {
+          inputs: {
+            body: {
+              makers: '@variables(\'makers\')'
+              prev: '@variables(\'prev\')'
+            }
+            function: {
+              id: resourceId('Microsoft.Web/sites/functions', functionsName, 'putUcsRecent')
+            }
+            method: 'PUT'
+          }
+          runAfter: {
+            'Check only prev.json at last-updated container': [
+              'Succeeded'
+            ]
+          }
+          type: 'Function'
+        }
       }
       parameters: {
         '$connections': {
