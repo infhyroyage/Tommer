@@ -5,5 +5,5 @@ app.http("putUcsRecent", {
   methods: ["PUT"],
   authLevel: "admin",
   handler: putUcsRecent,
-  route: "ucs/recent",
+  route: "ucs-recent",
 });

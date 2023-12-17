@@ -1,5 +1,5 @@
 /**
- * Request body of [PUT] /ucs/recent
+ * Request body of [PUT] /ucs-recent
  */
 export type PutUcsRecentReq = {
   /**
@@ -14,7 +14,7 @@ export type PutUcsRecentReq = {
 };
 
 /**
- * Response body of [PUT] /ucs/recent
+ * Response body of [PUT] /ucs-recent
  */
 export type PutUcsRecentRes = {
   /**
