@@ -179,7 +179,7 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
           }
           type: 'InitializeVariable'
         }
-        'List last-updated Blobs': {
+        'List Blobs at last-updated container': {
           inputs: {
             host: {
               connection: {
@@ -196,9 +196,9 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
           }
           type: 'ApiConnection'
         }
-        'Check Whether There is only last-updated/prev.json': {
+        'Check only prev.json at last-updated container': {
           actions: {
-            'Get Content of last-updated/prev.json': {
+            'Get Content of prev.json': {
               inputs: {
                 host: {
                   connection: {
@@ -210,25 +210,74 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
               }
               type: 'ApiConnection'
             }
+            'Parse prev.json': {
+              inputs: {
+                content: '@base64ToString(body(\'Get Content of prev.json\')[\'$content\'])'
+                schema: {
+                  items: {
+                    properties: {
+                      maker: {
+                        type: 'string'
+                      }
+                      name: {
+                        type: 'string'
+                      }
+                      no: {
+                        type: 'integer'
+                      }
+                      upload: {
+                        type: 'string'
+                      }
+                    }
+                    required: [
+                      'maker'
+                      'no'
+                      'name'
+                      'upload'
+                    ]
+                    type: 'object'
+                  }
+                  type: 'array'
+                }
+              }
+              runAfter: {
+                'Get Content of prev.json': [
+                  'Succeeded'
+                ]
+              }
+              type: 'ParseJson'
+            }
+            'Update Previous UCS List': {
+              inputs: {
+                name: 'prev'
+                value: '@body(\'Parse prev.json\')'
+              }
+              runAfter: {
+                'Parse prev.json': [
+                  'Succeeded'
+                ]
+              }
+              type: 'SetVariable'
+            }
           }
           expression: {
             and: [
               {
                 equals: [
-                  '@length(body(\'List last-updated Blobs\')?[\'value\'])'
+                  '@length(body(\'List Blobs at last-updated container\')?[\'value\'])'
                   1
                 ]
               }
               {
                 equals: [
-                  '@body(\'List last-updated Blobs\')?[\'value\'][0][\'Name\']'
+                  '@body(\'List Blobs at last-updated container\')?[\'value\'][0][\'Name\']'
                   1
                 ]
               }
             ]
           }
           runAfter: {
-            'List last-updated Blobs': [
+            'List Blobs at last-updated container': [
               'Succeeded'
             ]
           }
