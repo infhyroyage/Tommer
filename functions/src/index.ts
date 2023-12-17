@@ -1,9 +1,8 @@
 import { app } from "@azure/functions";
-import { putUcsRecent } from "./putUcsRecent";
+import { recent } from "./recent";
 
-app.http("putUcsRecent", {
+app.http("recent", {
   methods: ["PUT"],
   authLevel: "admin",
-  handler: putUcsRecent,
-  route: "ucs-recent",
+  handler: recent,
 });

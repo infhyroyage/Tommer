@@ -3,10 +3,10 @@ import {
   HttpResponseInit,
   InvocationContext,
 } from "@azure/functions";
-import { PutUcsRecentReq, PutUcsRecentRes, Ucs } from "./types";
+import { PutRecentReq, PutRecentRes, Ucs } from "./types";
 import { Browser, Page, chromium } from "playwright-chromium";
 
-export async function putUcsRecent(
+export async function recent(
   request: HttpRequest,
   context: InvocationContext
 ): Promise<HttpResponseInit> {
@@ -34,9 +34,9 @@ export async function putUcsRecent(
   }
 
   // Filter Recent UCS List at Previous Execution
-  const filteredPrev: Ucs[] = (req as PutUcsRecentReq).makers.map(
+  const filteredPrev: Ucs[] = (req as PutRecentReq).makers.map(
     (maker: string) => {
-      const foundUcs: Ucs | undefined = (req as PutUcsRecentReq).prev.find(
+      const foundUcs: Ucs | undefined = (req as PutRecentReq).prev.find(
         (ucs: Ucs) => ucs.maker === maker
       );
       return foundUcs ? foundUcs : { maker, no: -1, name: "", upload: "" };
@@ -103,7 +103,7 @@ export async function putUcsRecent(
       }
     }
 
-    const res: PutUcsRecentRes = { recent, notification };
+    const res: PutRecentRes = { recent, notification };
     return { status: 200, jsonBody: res };
   } finally {
     await browser.close();

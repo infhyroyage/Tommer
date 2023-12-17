@@ -1,7 +1,7 @@
 /**
- * Request body of [PUT] /ucs-recent
+ * Request body of [PUT] /recent
  */
-export type PutUcsRecentReq = {
+export type PutRecentReq = {
   /**
    * UCS Maker Name
    */
@@ -14,9 +14,9 @@ export type PutUcsRecentReq = {
 };
 
 /**
- * Response body of [PUT] /ucs-recent
+ * Response body of [PUT] /recent
  */
-export type PutUcsRecentRes = {
+export type PutRecentRes = {
   /**
    * Recent UCS List
    */
