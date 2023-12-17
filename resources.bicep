@@ -290,7 +290,7 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
               prev: '@variables(\'prev\')'
             }
             function: {
-              id: resourceId('Microsoft.Web/sites/functions', functionsName, 'putUcsRecent')
+              id: resourceId('Microsoft.Web/sites/functions', functionsName, 'recent')
             }
             method: 'PUT'
           }
