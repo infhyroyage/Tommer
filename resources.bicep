@@ -90,6 +90,16 @@ resource functions 'Microsoft.Web/sites@2022-09-01' = {
     }
   }
 }
+resource functionsRecent 'Microsoft.Web/sites/functions@2022-09-01' = {
+  parent: functions
+  name: 'recent'
+  properties: {
+    href: 'https://${functionsName}.azurewebsites.net/admin/functions/recent'
+    invoke_url_template: 'https://${functionsName}.azurewebsites.net/api/recent'
+    isDisabled: false
+    language: 'node'
+}
+}
 
 // Deploy Logic App
 resource apiConnAzureBlob 'Microsoft.Web/connections@2016-06-01' = {
