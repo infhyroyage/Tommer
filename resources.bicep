@@ -42,6 +42,7 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
 }
 
 // Deploy Azure Functions
+// TODO: [PUT] /recentのデプロイ後、bicepをデプロイすると、デプロイした[PUT] /recentがロストする
 resource functionsPlan 'Microsoft.Web/serverfarms@2022-09-01' = {
   name: functionsName
   location: location
@@ -300,7 +301,7 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
               prev: '@variables(\'prev\')'
             }
             function: {
-              id: resourceId('Microsoft.Web/sites/functions', functionsName, 'recent')
+              id: functionsRecent.id
             }
             method: 'PUT'
           }
