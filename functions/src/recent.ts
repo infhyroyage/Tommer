@@ -10,16 +10,16 @@ export async function recent(
   request: HttpRequest,
   context: InvocationContext
 ): Promise<HttpResponseInit> {
-  const req: any = await request.json();
+  const req = (await request.json()) as PutRecentReq;
   context.info({ req });
 
   // Validation
   if (
     typeof req !== "object" ||
     Object.keys(req).some((key: string) => !["makers", "prev"].includes(key)) ||
-    req.makers.some((maker: any) => typeof maker !== "string") ||
+    req.makers.some((maker: string) => typeof maker !== "string") ||
     req.prev.some(
-      (ucs: any) =>
+      (ucs: Ucs) =>
         typeof ucs !== "object" ||
         Object.keys(ucs).some(
           (key: string) => !["maker", "no", "name", "upload"].includes(key)
@@ -34,14 +34,12 @@ export async function recent(
   }
 
   // Filter Recent UCS List at Previous Execution
-  const filteredPrev: Ucs[] = (req as PutRecentReq).makers.map(
-    (maker: string) => {
-      const foundUcs: Ucs | undefined = (req as PutRecentReq).prev.find(
-        (ucs: Ucs) => ucs.maker === maker
-      );
-      return foundUcs ? foundUcs : { maker, no: -1, name: "", upload: "" };
-    }
-  );
+  const filteredPrev: Ucs[] = req.makers.map((maker: string) => {
+    const foundUcs: Ucs | undefined = req.prev.find(
+      (ucs: Ucs) => ucs.maker === maker
+    );
+    return foundUcs ? foundUcs : { maker, no: -1, name: "", upload: "" };
+  });
 
   // Scrape Recent UCS and Update Response body per UCS Maker
   const recent: Ucs[] = [];
