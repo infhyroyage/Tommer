@@ -3,6 +3,6 @@ import { recent } from "./recent";
 
 app.http("recent", {
   methods: ["PUT"],
-  authLevel: "admin",
+  authLevel: "function",
   handler: recent,
 });
