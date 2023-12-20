@@ -6,10 +6,10 @@ on:
       - main
     paths:
       - .github/workflows/create-azure-resources.yaml
-      - resources.bicep
+      - resources**
 
 jobs:
-  create-resources:
+  create-without-logic-apps:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -26,15 +26,49 @@ jobs:
             -n ${{ vars.AZURE_RESOURCE_GROUP }} \
             -l ${{ vars.AZURE_LOCATION }}
 
-      - name: Deploy Azure Resources
+      - name: Deploy Azure Resources without Logic Apps
         run: |
           az deployment group create \
             --resource-group ${{ vars.AZURE_RESOURCE_GROUP }} \
-            --template-file resources.bicep \
+            --template-file resources/storage-insights-functions-apiConn.bicep \
             --parameters \
               apiConnAzureblobName=${{ vars.AZURE_API_CONNECTION_AZUREBLOB }} \
               apiConnOutlookName=${{ vars.AZURE_API_CONNECTION_OUTLOOK }} \
               functionsName=${{ vars.AZURE_FUNCTIONS }} \
               insightsName=${{ vars.AZURE_APPLICATION_INSIGHTS }} \
+              storageName=${{ vars.AZURE_STORAGE }}
+
+  use-build-deploy-functions-app-workflow:
+    needs: create-without-logic-apps
+    uses: ./.github/workflows/reusable-build-deploy-functions-app.yaml
+    with:
+      AZURE_AD_SP_CONTRIBUTOR_CLIENT_ID: ${{ vars.AZURE_AD_SP_CONTRIBUTOR_CLIENT_ID }}
+      AZURE_FUNCTIONS: ${{ vars.AZURE_FUNCTIONS }}
+      AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+    secrets:
+      AZURE_AD_SP_CONTRIBUTOR_CLIENT_SECRET: ${{ secrets.AZURE_AD_SP_CONTRIBUTOR_CLIENT_SECRET }}
+
+  create-logic-apps:
+    needs: use-build-deploy-functions-app-workflow
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+
+      - name: Login Azure as Contributor
+        uses: azure/login@v1
+        with:
+          creds: '{"clientId":"${{ vars.AZURE_AD_SP_CONTRIBUTOR_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_AD_SP_CONTRIBUTOR_CLIENT_SECRET }}","subscriptionId":"${{ vars.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ vars.AZURE_TENANT_ID }}"}'
+
+      - name: Deploy Azure Logic Apps
+        run: |
+          az deployment group create \
+            --resource-group ${{ vars.AZURE_RESOURCE_GROUP }} \
+            --template-file resources/logic-apps.bicep \
+            --parameters \
+              apiConnAzureblobName=${{ vars.AZURE_API_CONNECTION_AZUREBLOB }} \
+              apiConnOutlookName=${{ vars.AZURE_API_CONNECTION_OUTLOOK }} \
+              functionsName=${{ vars.AZURE_FUNCTIONS }} \
               logicAppName=${{ vars.AZURE_LOGIC_APP }} \
               storageName=${{ vars.AZURE_STORAGE }}
