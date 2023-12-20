@@ -68,6 +68,10 @@ resource functions 'Microsoft.Web/sites@2022-09-01' = {
           value: 'node'
         }
         {
+          name: 'PLAYWRIGHT_BROWSERS_PATH'
+          value: '0'
+        }
+        {
           name: 'WEBSITE_CONTENTAZUREFILECONNECTIONSTRING'
           value: 'DefaultEndpointsProtocol=https;AccountName=${storageName};EndpointSuffix=${environment().suffixes.storage};AccountKey=${storage.listKeys().keys[0].value}'
         }
