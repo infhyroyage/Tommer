@@ -1,0 +1,93 @@
+name: Build and Deploy Azure Functions Application (Reusable Workflow)
+
+on:
+  workflow_call:
+    inputs:
+      AZURE_AD_SP_CONTRIBUTOR_CLIENT_ID:
+        required: true
+        type: string
+      AZURE_FUNCTIONS:
+        required: true
+        type: string
+      AZURE_SUBSCRIPTION_ID:
+        required: true
+        type: string
+      AZURE_TENANT_ID:
+        required: true
+        type: string
+      NODE_VERSION:
+        default: "20.10.0"
+        required: false
+        type: string
+    secrets:
+      AZURE_AD_SP_CONTRIBUTOR_CLIENT_SECRET:
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+
+      - name: Setup Node ${{ inputs.NODE_VERSION }} Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.NODE_VERSION }}
+
+      - name: Restore cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-tommer-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
+          restore-keys: ${{ runner.os }}-tommer-${{ hashFiles('**/package-lock.json') }}-
+
+      - name: Install dependencies
+        run: |
+          pushd functions
+          npm ci
+          popd
+
+      - name: Build
+        run: |
+          pushd functions
+          npm run build
+          popd
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.AZURE_FUNCTIONS }}
+          path: |
+            functions/dist
+            functions/host.json
+            functions/package.json
+            !functions/node_modules
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.AZURE_FUNCTIONS }}
+
+      - name: Setup Node ${{ inputs.NODE_VERSION }} Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.NODE_VERSION }}
+
+      - name: Build Azure Functions Application
+        run: npm install --production
+
+      - name: Login Azure as Contributor
+        uses: azure/login@v1
+        with:
+          creds: '{"clientId":"${{ inputs.AZURE_AD_SP_CONTRIBUTOR_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_AD_SP_CONTRIBUTOR_CLIENT_SECRET }}","subscriptionId":"${{ inputs.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ inputs.AZURE_TENANT_ID }}"}'
+
+      - name: Deploy Azure Functions Application
+        uses: Azure/functions-action@v1.5.1
+        with:
+          app-name: ${{ inputs.AZURE_FUNCTIONS }}
+          package: .
