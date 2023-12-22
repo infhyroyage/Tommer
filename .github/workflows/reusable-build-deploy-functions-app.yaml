@@ -78,10 +78,8 @@ jobs:
         with:
           node-version: ${{ inputs.NODE_VERSION }}
 
-      - name: Install dependencies
-        run: |
-          npm install --production
-          npx playwright install
+      - name: Build Azure Functions Application
+        run: npm install --production
 
       - name: Login Azure as Contributor
         uses: azure/login@v1
