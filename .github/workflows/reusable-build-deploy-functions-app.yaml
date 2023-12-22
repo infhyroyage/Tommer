@@ -9,6 +9,9 @@ on:
       AZURE_FUNCTIONS:
         required: true
         type: string
+      AZURE_FUNCTIONS_PLAN:
+        required: true
+        type: string
       AZURE_SUBSCRIPTION_ID:
         required: true
         type: string

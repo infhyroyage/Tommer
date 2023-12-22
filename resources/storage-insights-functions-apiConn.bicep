@@ -1,6 +1,7 @@
 // Parameters
 param apiConnAzureblobName string
 param apiConnOutlookName string
+// param functionsPlanName string
 param functionsName string
 param insightsName string
 param storageName string
@@ -9,20 +10,20 @@ param location string = resourceGroup().location
 
 // Deploy Storage Account
 resource storage 'Microsoft.Storage/storageAccounts@2022-09-01' = {
-  name: storageName
+  kind: 'StorageV2'
   location: location
+  name: storageName
   sku: {
     name: 'Standard_LRS'
   }
-  kind: 'StorageV2'
 }
 resource blob 'Microsoft.Storage/storageAccounts/blobServices@2022-09-01' = {
   name: 'default'
   parent: storage
 }
 resource container 'Microsoft.Storage/storageAccounts/blobServices/containers@2022-09-01' = {
-  parent: blob
   name: 'last-updated'
+  parent: blob
   properties: {
     publicAccess: 'None'
   }
@@ -30,9 +31,9 @@ resource container 'Microsoft.Storage/storageAccounts/blobServices/containers@20
 
 // Deploy Application Insights
 resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
-  name: insightsName
-  location: location
   kind: 'web'
+  location: location
+  name: insightsName
   properties: {
     Application_Type: 'web'
   }
@@ -40,17 +41,21 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
 
 // Deploy Azure Functions
 resource functionsPlan 'Microsoft.Web/serverfarms@2022-09-01' = {
-  name: functionsName
+  kind: 'linux'
   location: location
+  name: functionsName
+  properties: {
+    reserved: true
+  }
   sku: {
     name: 'Y1'
     tier: 'Dynamic'
   }
 }
 resource functions 'Microsoft.Web/sites@2022-09-01' = {
-  name: functionsName
-  location: location
   kind: 'functionapp'
+  location: location
+  name: functionsName
   properties: {
     serverFarmId: functionsPlan.id
     siteConfig: {
@@ -80,14 +85,11 @@ resource functions 'Microsoft.Web/sites@2022-09-01' = {
           value: toLower(functionsName)
         }
         {
-          name: 'WEBSITE_NODE_DEFAULT_VERSION'
-          value: '~20'
-        }
-        {
           name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
           value: appInsights.properties.InstrumentationKey
         }
       ]
+      linuxFxVersion: 'Node|20'
     }
   }
 }
