@@ -99,11 +99,11 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
                       maker: {
                         type: 'string'
                       }
-                      name: {
-                        type: 'string'
-                      }
                       no: {
                         type: 'integer'
+                      }
+                      name: {
+                        type: 'string'
                       }
                       upload: {
                         type: 'string'
@@ -180,6 +180,197 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
             ]
           }
           type: 'Function'
+        }
+        'Check Response Code of Functions App': {
+          acrions: {
+            Terminate: {
+              inputs: {
+                runError: {
+                  code: '@{outputs(\'Run_Functions_App\')[\'statusCode\']}'
+                  message: '@{body(\'Run_Functions_App\')}'
+                }
+                runStatus:'Failed'
+              }
+              type: 'Terminate'
+            }
+          }
+          expression: {
+            and: [
+              {
+                not: {
+                  equals: [
+                    '@outputs(\'Run_Functions_App\')[\'statusCode\']'
+                    200
+                  ]
+                }
+              }
+            ]
+          }
+          runAfter: {
+            'Run Functions App': [
+              'Succeeded'
+            ]
+          }
+          type: 'If'
+        }
+        'Parse Response Body of Functions App': {
+          inputs: {
+            content: '@body(\'Run_Functions_App\')'
+            schema: {
+              properties: {
+                notification: {
+                  items: {
+                    properties: {
+                      maker: {
+                        type: 'string'
+                      }
+                      no: {
+                        type: 'integer'
+                      }
+                      name: {
+                        type: 'string'
+                      }
+                      upload: {
+                        type: 'string'
+                      }
+                    }
+                    required: [
+                      'maker'
+                      'no'
+                      'name'
+                      'upload'
+                    ]
+                    type: 'object'
+                  }
+                  type: 'array'
+                }
+                recent: {
+                  items: {
+                    properties: {
+                      maker: {
+                        type: 'string'
+                      }
+                      no: {
+                        type: 'integer'
+                      }
+                      name: {
+                        type: 'string'
+                      }
+                      upload: {
+                        type: 'string'
+                      }
+                    }
+                    required: [
+                      'maker'
+                      'no'
+                      'name'
+                      'upload'
+                    ]
+                    type: 'object'
+                  }
+                  type: 'array'
+                }
+              }
+              type: 'object'
+            }
+          }
+          runAfter: {
+            'Check Response Code of Functions App': [
+              'Succeeded'
+            ]
+          }
+          type: 'ParseJson'
+        }
+        'Check only prev.json Again at last-updated container': {
+          actions: {
+            'Update Content of prev.json': {
+              inputs: {
+                body: '@body(\'Parse_Response_Body_of_Functions_App\')?[\'recent\']'
+                headers:{
+                  ReadFileMetadataFromServer: true
+                }
+                host: {
+                  connection: {
+                    name: '@parameters(\'$connections\')[\'apiConnAzureBlob\'][\'connectionId\']'
+                  }
+                }
+                method: 'put'
+                path: '/v2/datasets/@{encodeURIComponent(encodeURIComponent(\'${storageName}\'))}/files/@{encodeURIComponent(encodeURIComponent(\'last-updated/prev.json\'))}'
+              }
+              type: 'ApiConnection'
+            }
+          }
+          else: {
+            actions: {
+              'Create prev.json': {
+                inputs: {
+                  body: '@body(\'Parse_Response_Body_of_Functions_App\')?[\'recent\']'
+                  headers:{
+                    ReadFileMetadataFromServer: true
+                  }
+                  host: {
+                    connection: {
+                      name: '@parameters(\'$connections\')[\'apiConnAzureBlob\'][\'connectionId\']'
+                    }
+                  }
+                  method: 'post'
+                  path: '/v2/datasets/@{encodeURIComponent(encodeURIComponent(\'${storageName}\'))}/files'
+                  queries: {
+                    folderPath: 'last-updated'
+                    name: 'prev.json'
+                    queryParametersSingleEncoded: true
+                  }
+                }
+                runtimeConfiguration: {
+                  contentTransfer: {
+                    transferMode: 'Chunked'
+                  }
+                }
+                type: 'ApiConnection'
+              }
+            }
+          }
+          expression: {
+            and: [
+              {
+                equals: [
+                  '@length(body(\'List Blobs at last-updated container\')?[\'value\'])'
+                  1
+                ]
+              }
+              {
+                equals: [
+                  '@body(\'List Blobs at last-updated container\')?[\'value\'][0][\'Name\']'
+                  1
+                ]
+              }
+            ]
+          }
+          runAfter: {
+            'Parse Response Body of Functions App': [
+              'Succeeded'
+            ]
+          }
+          type: 'If'
+        }
+        'Check Notification UCS List': {
+          actions: {}
+          expression: {
+            and: [
+              {
+                greater: [
+                  '@length(body(\'Parse_Response_Body_of_Functions_App\')?[\'notification\'])'
+                  0
+                ]
+              }
+            ]
+          }
+          runAfter: {
+            'Parse Response Body of Functions App': [
+              'Succeeded'
+            ]
+          }
+          type: 'If'
         }
       }
       parameters: {
