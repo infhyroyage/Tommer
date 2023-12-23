@@ -74,7 +74,7 @@ resource functions 'Microsoft.Web/sites@2022-09-01' = {
         }
         {
           name: 'PLAYWRIGHT_BROWSERS_PATH'
-          value: '0'
+          value: './browser'
         }
         {
           name: 'WEBSITE_CONTENTAZUREFILECONNECTIONSTRING'
