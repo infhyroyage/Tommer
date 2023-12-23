@@ -1,7 +1,6 @@
 # Tommer
 
 [![Create Azure Resources](https://github.com/infhyroyage/Tommer/actions/workflows/create-azure-resources.yaml/badge.svg)](https://github.com/infhyroyage/Tommer/actions/workflows/create-azure-resources.yaml)
-[![Build and Deploy Azure Functions Application](https://github.com/infhyroyage/Tommer/actions/workflows/build-deploy-functions-app.yaml/badge.svg)](https://github.com/infhyroyage/Tommer/actions/workflows/build-deploy-functions-app.yaml)
 [![Scan Javascript/Typescript by CodeQL](https://github.com/infhyroyage/Tommer/actions/workflows/codeql.yaml/badge.svg)](https://github.com/infhyroyage/Tommer/actions/workflows/codeql.yaml)
 
 ```
