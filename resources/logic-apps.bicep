@@ -186,8 +186,8 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
             Terminate: {
               inputs: {
                 runError: {
-                  code: '@{outputs(\'Run_Functions_App\')[\'statusCode\']}'
-                  message: '@{body(\'Run_Functions_App\')}'
+                  code: '@{outputs(\'Run Functions App\')[\'statusCode\']}'
+                  message: '@{body(\'Run Functions App\')}'
                 }
                 runStatus:'Failed'
               }
@@ -199,7 +199,7 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
               {
                 not: {
                   equals: [
-                    '@outputs(\'Run_Functions_App\')[\'statusCode\']'
+                    '@outputs(\'Run Functions App\')[\'statusCode\']'
                     200
                   ]
                 }
@@ -215,7 +215,7 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
         }
         'Parse Response Body of Functions App': {
           inputs: {
-            content: '@body(\'Run_Functions_App\')'
+            content: '@body(\'Run Functions App\')'
             schema: {
               properties: {
                 notification: {
@@ -285,7 +285,7 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
           actions: {
             'Update Content of prev.json': {
               inputs: {
-                body: '@body(\'Parse_Response_Body_of_Functions_App\')?[\'recent\']'
+                body: '@body(\'Parse Response Body of Functions App\')?[\'recent\']'
                 headers:{
                   ReadFileMetadataFromServer: true
                 }
@@ -304,7 +304,7 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
             actions: {
               'Create prev.json': {
                 inputs: {
-                  body: '@body(\'Parse_Response_Body_of_Functions_App\')?[\'recent\']'
+                  body: '@body(\'Parse Response Body of Functions App\')?[\'recent\']'
                   headers:{
                     ReadFileMetadataFromServer: true
                   }
@@ -358,7 +358,7 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
             'Send Mail': {
               inputs: {
                 body: {
-                  Body: '<p>@{body(\'Parse_Response_Body_of_Functions_App\')?[\'notification\']}</p>'
+                  Body: '<p>@{body(\'Parse Response Body of Functions App\')?[\'notification\']}</p>'
                   Subject: 'New UCS List was detected! [@{workflow().run.id}]'
                   To: '@variables(\'mail\')'
                 }
@@ -377,7 +377,7 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
             and: [
               {
                 greater: [
-                  '@length(body(\'Parse_Response_Body_of_Functions_App\')?[\'notification\'])'
+                  '@length(body(\'Parse Response Body of Functions App\')?[\'notification\'])'
                   0
                 ]
               }
