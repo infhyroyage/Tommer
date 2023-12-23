@@ -354,7 +354,25 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
           type: 'If'
         }
         'Check Notification UCS List': {
-          actions: {}
+          actions: {
+            'Send Mail': {
+              inputs: {
+                body: {
+                  Body: '<p>@{body(\'Parse_Response_Body_of_Functions_App\')?[\'notification\']}</p>'
+                  Subject: 'New UCS List was detected! [@{workflow().run.id}]'
+                  To: '@variables(\'mail\')'
+                }
+                host: {
+                  connection: {
+                    name: '@parameters(\'$connections\')[\'apiConnOutlook\'][\'connectionId\']'
+                  }
+                }
+                method: 'post'
+                path: '/v2/Mail'
+              }
+              type: 'ApiConnection'
+            }
+          }
           expression: {
             and: [
               {
