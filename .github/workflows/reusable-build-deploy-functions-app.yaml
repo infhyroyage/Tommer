@@ -81,10 +81,10 @@ jobs:
         with:
           node-version: ${{ inputs.NODE_VERSION }}
 
-      - name: Install Dependencies
-        run: |
-          npm install --production
-          cp -r ~/.cache/ms-playwright/* .
+      - name: Install Dependencies and Browser
+        run: npm install --production
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: ./browser
 
       - name: Login Azure as Contributor
         uses: azure/login@v1
