@@ -182,7 +182,7 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
           type: 'Function'
         }
         'Check Response Code of Functions App': {
-          acrions: {
+          actions: {
             Terminate: {
               inputs: {
                 runError: {
