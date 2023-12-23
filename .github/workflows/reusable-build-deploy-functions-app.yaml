@@ -81,7 +81,9 @@ jobs:
         with:
           node-version: ${{ inputs.NODE_VERSION }}
 
-      - name: Install Dependencies and Browser
+      # Install playwright-chromium and Chromium browser at the same time
+      # Default installation path is ~/.cache, so overwrite it with PLAYWRIGHT_BROWSERS_PATH
+      - name: Install Dependencies and Chromium
         run: npm install --production
         env:
           PLAYWRIGHT_BROWSERS_PATH: ./browser
