@@ -16,6 +16,7 @@ updates:
       - "infhyroyage"
     ignore:
       - dependency-name: "@types/node"
+      - dependency-name: "playwright-chromium"
       - dependency-name: "typescript"
     labels: []
     reviewers:
