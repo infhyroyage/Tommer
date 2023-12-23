@@ -38,14 +38,14 @@ jobs:
         with:
           node-version: ${{ inputs.NODE_VERSION }}
 
-      - name: Restore cache
+      - name: Restore Cache
         uses: actions/cache@v3
         with:
           path: ~/.npm
           key: ${{ runner.os }}-tommer-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
           restore-keys: ${{ runner.os }}-tommer-${{ hashFiles('**/package-lock.json') }}-
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: |
           pushd functions
           npm ci
@@ -81,8 +81,10 @@ jobs:
         with:
           node-version: ${{ inputs.NODE_VERSION }}
 
-      - name: Build Azure Functions Application
-        run: npm install --production
+      - name: Install Dependencies
+        run: |
+          npm install --production
+          cp -r ~/.cache/ms-playwright/* .
 
       - name: Login Azure as Contributor
         uses: azure/login@v1
