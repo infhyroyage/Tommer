@@ -1,2 +1,5 @@
-*.ts
+__tests__
+.eslintrc.yaml
+jest.config.ts
+src
 tsconfig.json
