@@ -153,6 +153,8 @@ describe("[PUT] /recent", () => {
     const mock$Tbody = jest.fn();
     const mock$Tr = jest.fn();
     const mock$TdNo = jest.fn();
+    const mock$PName = jest.fn();
+    const mock$TdUpload = jest.fn();
     const mockClose = jest.fn();
     const mockGoto = jest.fn();
     const mockNewContext = jest.fn();
@@ -218,6 +220,8 @@ describe("[PUT] /recent", () => {
       expect(mock$Tbody).toHaveBeenCalledTimes(0);
       expect(mock$Tr).toHaveBeenCalledTimes(0);
       expect(mock$TdNo).toHaveBeenCalledTimes(0);
+      expect(mock$PName).toHaveBeenCalledTimes(0);
+      expect(mock$TdUpload).toHaveBeenCalledTimes(0);
       expect(mockClose).toHaveBeenCalled();
       expect(mockGoto).toHaveBeenCalledTimes(0);
       expect(mockNewContext).toHaveBeenCalledTimes(0);
@@ -247,6 +251,8 @@ describe("[PUT] /recent", () => {
       expect(mock$Tbody).toHaveBeenCalledTimes(0);
       expect(mock$Tr).toHaveBeenCalledTimes(0);
       expect(mock$TdNo).toHaveBeenCalledTimes(0);
+      expect(mock$PName).toHaveBeenCalledTimes(0);
+      expect(mock$TdUpload).toHaveBeenCalledTimes(0);
       expect(mockClose).toHaveBeenCalled();
       expect(mockGoto).toHaveBeenCalledWith(
         "https://ucs.piugame.com/ucs_share?s_type=maker&s_val=maker1"
@@ -279,6 +285,8 @@ describe("[PUT] /recent", () => {
       expect(mock$Tbody).toHaveBeenCalledWith("tr");
       expect(mock$Tr).toHaveBeenCalledTimes(0);
       expect(mock$TdNo).toHaveBeenCalledTimes(0);
+      expect(mock$PName).toHaveBeenCalledTimes(0);
+      expect(mock$TdUpload).toHaveBeenCalledTimes(0);
       expect(mockClose).toHaveBeenCalled();
       expect(mockGoto).toHaveBeenCalledWith(
         "https://ucs.piugame.com/ucs_share?s_type=maker&s_val=maker1"
@@ -310,8 +318,11 @@ describe("[PUT] /recent", () => {
       expect(response.jsonBody).toStrictEqual({ recent: [], notification: [] });
       expect(mock$).toHaveBeenCalledWith("tbody");
       expect(mock$Tbody).toHaveBeenCalledWith("tr");
-      expect(mock$Tr).toHaveBeenCalledWith("td.w_no.ucsShare");
+      expect(mock$Tr).toHaveBeenCalledTimes(1);
+      expect(mock$Tr).toHaveBeenNthCalledWith(1, "td.w_no.ucsShare");
       expect(mock$TdNo).toHaveBeenCalledTimes(0);
+      expect(mock$PName).toHaveBeenCalledTimes(0);
+      expect(mock$TdUpload).toHaveBeenCalledTimes(0);
       expect(mockClose).toHaveBeenCalled();
       expect(mockGoto).toHaveBeenCalledWith(
         "https://ucs.piugame.com/ucs_share?s_type=maker&s_val=maker1"
@@ -347,8 +358,12 @@ describe("[PUT] /recent", () => {
       expect(response.jsonBody).toStrictEqual({ recent: [], notification: [] });
       expect(mock$).toHaveBeenCalledWith("tbody");
       expect(mock$Tbody).toHaveBeenCalledWith("tr");
+      expect(mock$Tr).toHaveBeenCalledTimes(2);
       expect(mock$Tr).toHaveBeenNthCalledWith(1, "td.w_no.ucsShare");
       expect(mock$Tr).toHaveBeenNthCalledWith(2, "p.t1");
+      expect(mock$TdNo).toHaveBeenCalledTimes(0);
+      expect(mock$PName).toHaveBeenCalledTimes(0);
+      expect(mock$TdUpload).toHaveBeenCalledTimes(0);
       expect(mockClose).toHaveBeenCalled();
       expect(mockGoto).toHaveBeenCalledWith(
         "https://ucs.piugame.com/ucs_share?s_type=maker&s_val=maker1"
