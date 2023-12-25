@@ -149,8 +149,10 @@ describe("[PUT] /recent", () => {
   });
 
   describe("Scraping if previous ucs is empty", () => {
+    const mock$ = jest.fn();
     const mock$Tbody = jest.fn();
     const mock$Tr = jest.fn();
+    const mock$TdNo = jest.fn();
     const mockClose = jest.fn();
     const mockGoto = jest.fn();
     const mockNewContext = jest.fn();
@@ -189,7 +191,7 @@ describe("[PUT] /recent", () => {
         newContext: mockNewContext.mockResolvedValue({
           newPage: mockNewPage.mockResolvedValue({
             goto: mockGoto,
-            $: mock$Tbody,
+            $: mock$,
           } as unknown as jest.Mocked<Page>),
         }),
         close: mockClose,
@@ -212,7 +214,10 @@ describe("[PUT] /recent", () => {
 
       expect(response.status).toBe(200);
       expect(response.jsonBody).toStrictEqual({ recent: [], notification: [] });
+      expect(mock$).toHaveBeenCalledTimes(0);
       expect(mock$Tbody).toHaveBeenCalledTimes(0);
+      expect(mock$Tr).toHaveBeenCalledTimes(0);
+      expect(mock$TdNo).toHaveBeenCalledTimes(0);
       expect(mockClose).toHaveBeenCalled();
       expect(mockGoto).toHaveBeenCalledTimes(0);
       expect(mockNewContext).toHaveBeenCalledTimes(0);
@@ -221,7 +226,7 @@ describe("[PUT] /recent", () => {
     });
 
     it("Should return empty recent ucs list and empty notifications if tbody is null", async () => {
-      mock$Tbody.mockResolvedValueOnce(null);
+      mock$.mockResolvedValueOnce(null);
 
       const response = await recent(
         new HttpRequest({
@@ -238,7 +243,10 @@ describe("[PUT] /recent", () => {
 
       expect(response.status).toBe(200);
       expect(response.jsonBody).toStrictEqual({ recent: [], notification: [] });
-      expect(mock$Tbody).toHaveBeenCalledWith("tbody");
+      expect(mock$).toHaveBeenCalledWith("tbody");
+      expect(mock$Tbody).toHaveBeenCalledTimes(0);
+      expect(mock$Tr).toHaveBeenCalledTimes(0);
+      expect(mock$TdNo).toHaveBeenCalledTimes(0);
       expect(mockClose).toHaveBeenCalled();
       expect(mockGoto).toHaveBeenCalledWith(
         "https://ucs.piugame.com/ucs_share?s_type=maker&s_val=maker1"
@@ -249,8 +257,8 @@ describe("[PUT] /recent", () => {
     });
 
     it("Should return empty recent ucs list and empty notifications if tr is null", async () => {
-      mock$Tr.mockResolvedValueOnce(null);
-      mock$Tbody.mockResolvedValueOnce({ $: mock$Tr });
+      mock$Tbody.mockResolvedValueOnce(null);
+      mock$.mockResolvedValueOnce({ $: mock$Tbody });
 
       const response = await recent(
         new HttpRequest({
@@ -267,8 +275,10 @@ describe("[PUT] /recent", () => {
 
       expect(response.status).toBe(200);
       expect(response.jsonBody).toStrictEqual({ recent: [], notification: [] });
-      expect(mock$Tbody).toHaveBeenCalledWith("tbody");
-      expect(mock$Tr).toHaveBeenCalledWith("tr");
+      expect(mock$).toHaveBeenCalledWith("tbody");
+      expect(mock$Tbody).toHaveBeenCalledWith("tr");
+      expect(mock$Tr).toHaveBeenCalledTimes(0);
+      expect(mock$TdNo).toHaveBeenCalledTimes(0);
       expect(mockClose).toHaveBeenCalled();
       expect(mockGoto).toHaveBeenCalledWith(
         "https://ucs.piugame.com/ucs_share?s_type=maker&s_val=maker1"
@@ -276,6 +286,76 @@ describe("[PUT] /recent", () => {
       expect(mockNewContext).toHaveBeenCalled();
       expect(mockNewPage).toHaveBeenCalled();
       expect(mockWarn).toHaveBeenCalledWith("[maker: maker1] tr is null.");
+    });
+
+    it("Should return empty recent ucs list and empty notifications if td.w_no.ucsShare is null", async () => {
+      mock$Tr.mockResolvedValueOnce(null);
+      mock$Tbody.mockResolvedValueOnce({ $: mock$Tr });
+      mock$.mockResolvedValueOnce({ $: mock$Tbody });
+
+      const response = await recent(
+        new HttpRequest({
+          ...httpRequestInitDefault,
+          body: {
+            string: JSON.stringify({
+              makers: ["maker1"],
+              prev: [],
+            }),
+          },
+        }),
+        invocationContext
+      );
+
+      expect(response.status).toBe(200);
+      expect(response.jsonBody).toStrictEqual({ recent: [], notification: [] });
+      expect(mock$).toHaveBeenCalledWith("tbody");
+      expect(mock$Tbody).toHaveBeenCalledWith("tr");
+      expect(mock$Tr).toHaveBeenCalledWith("td.w_no.ucsShare");
+      expect(mock$TdNo).toHaveBeenCalledTimes(0);
+      expect(mockClose).toHaveBeenCalled();
+      expect(mockGoto).toHaveBeenCalledWith(
+        "https://ucs.piugame.com/ucs_share?s_type=maker&s_val=maker1"
+      );
+      expect(mockNewContext).toHaveBeenCalled();
+      expect(mockNewPage).toHaveBeenCalled();
+      expect(mockWarn).toHaveBeenCalledWith(
+        "[maker: maker1] td.w_no.ucsShare is null."
+      );
+    });
+
+    it("Should return empty recent ucs list and empty notifications if p.t1 is null", async () => {
+      mock$Tr
+        .mockResolvedValueOnce({ $: mock$TdNo })
+        .mockResolvedValueOnce(null);
+      mock$Tbody.mockResolvedValueOnce({ $: mock$Tr });
+      mock$.mockResolvedValueOnce({ $: mock$Tbody });
+
+      const response = await recent(
+        new HttpRequest({
+          ...httpRequestInitDefault,
+          body: {
+            string: JSON.stringify({
+              makers: ["maker1"],
+              prev: [],
+            }),
+          },
+        }),
+        invocationContext
+      );
+
+      expect(response.status).toBe(200);
+      expect(response.jsonBody).toStrictEqual({ recent: [], notification: [] });
+      expect(mock$).toHaveBeenCalledWith("tbody");
+      expect(mock$Tbody).toHaveBeenCalledWith("tr");
+      expect(mock$Tr).toHaveBeenNthCalledWith(1, "td.w_no.ucsShare");
+      expect(mock$Tr).toHaveBeenNthCalledWith(2, "p.t1");
+      expect(mockClose).toHaveBeenCalled();
+      expect(mockGoto).toHaveBeenCalledWith(
+        "https://ucs.piugame.com/ucs_share?s_type=maker&s_val=maker1"
+      );
+      expect(mockNewContext).toHaveBeenCalled();
+      expect(mockNewPage).toHaveBeenCalled();
+      expect(mockWarn).toHaveBeenCalledWith("[maker: maker1] p.t1 is null.");
     });
   });
 });
