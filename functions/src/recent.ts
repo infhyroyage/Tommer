@@ -102,6 +102,7 @@ export async function recent(
     }
 
     const res: PutRecentRes = { recent, notification };
+    context.info({ res });
     return { status: 200, jsonBody: res };
   } finally {
     await browser.close();
