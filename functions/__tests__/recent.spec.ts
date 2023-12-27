@@ -149,7 +149,7 @@ describe("[PUT] /recent", () => {
   });
 
   describe("Scraping if previous ucs is empty", () => {
-    const mock$ = jest.fn();
+    const mock$Page = jest.fn();
     const mock$Tbody = jest.fn();
     const mock$Tr = jest.fn();
     const mock$TdNo = jest.fn();
@@ -193,7 +193,7 @@ describe("[PUT] /recent", () => {
         newContext: mockNewContext.mockResolvedValue({
           newPage: mockNewPage.mockResolvedValue({
             goto: mockGoto,
-            $: mock$,
+            $: mock$Page,
           } as unknown as jest.Mocked<Page>),
         }),
         close: mockClose,
@@ -216,7 +216,7 @@ describe("[PUT] /recent", () => {
 
       expect(response.status).toBe(200);
       expect(response.jsonBody).toStrictEqual({ recent: [], notification: [] });
-      expect(mock$).toHaveBeenCalledTimes(0);
+      expect(mock$Page).toHaveBeenCalledTimes(0);
       expect(mock$Tbody).toHaveBeenCalledTimes(0);
       expect(mock$Tr).toHaveBeenCalledTimes(0);
       expect(mock$TdNo).toHaveBeenCalledTimes(0);
@@ -230,7 +230,7 @@ describe("[PUT] /recent", () => {
     });
 
     it("Should return empty recent ucs list and empty notifications if tbody is null", async () => {
-      mock$.mockResolvedValueOnce(null);
+      mock$Page.mockResolvedValueOnce(null);
 
       const response = await recent(
         new HttpRequest({
@@ -247,7 +247,7 @@ describe("[PUT] /recent", () => {
 
       expect(response.status).toBe(200);
       expect(response.jsonBody).toStrictEqual({ recent: [], notification: [] });
-      expect(mock$).toHaveBeenCalledWith("tbody");
+      expect(mock$Page).toHaveBeenCalledWith("tbody");
       expect(mock$Tbody).toHaveBeenCalledTimes(0);
       expect(mock$Tr).toHaveBeenCalledTimes(0);
       expect(mock$TdNo).toHaveBeenCalledTimes(0);
@@ -264,7 +264,7 @@ describe("[PUT] /recent", () => {
 
     it("Should return empty recent ucs list and empty notifications if tr is null", async () => {
       mock$Tbody.mockResolvedValueOnce(null);
-      mock$.mockResolvedValueOnce({ $: mock$Tbody });
+      mock$Page.mockResolvedValueOnce({ $: mock$Tbody });
 
       const response = await recent(
         new HttpRequest({
@@ -281,7 +281,7 @@ describe("[PUT] /recent", () => {
 
       expect(response.status).toBe(200);
       expect(response.jsonBody).toStrictEqual({ recent: [], notification: [] });
-      expect(mock$).toHaveBeenCalledWith("tbody");
+      expect(mock$Page).toHaveBeenCalledWith("tbody");
       expect(mock$Tbody).toHaveBeenCalledWith("tr");
       expect(mock$Tr).toHaveBeenCalledTimes(0);
       expect(mock$TdNo).toHaveBeenCalledTimes(0);
@@ -299,7 +299,7 @@ describe("[PUT] /recent", () => {
     it("Should return empty recent ucs list and empty notifications if td.w_no.ucsShare is null", async () => {
       mock$Tr.mockResolvedValueOnce(null);
       mock$Tbody.mockResolvedValueOnce({ $: mock$Tr });
-      mock$.mockResolvedValueOnce({ $: mock$Tbody });
+      mock$Page.mockResolvedValueOnce({ $: mock$Tbody });
 
       const response = await recent(
         new HttpRequest({
@@ -316,7 +316,7 @@ describe("[PUT] /recent", () => {
 
       expect(response.status).toBe(200);
       expect(response.jsonBody).toStrictEqual({ recent: [], notification: [] });
-      expect(mock$).toHaveBeenCalledWith("tbody");
+      expect(mock$Page).toHaveBeenCalledWith("tbody");
       expect(mock$Tbody).toHaveBeenCalledWith("tr");
       expect(mock$Tr).toHaveBeenCalledTimes(1);
       expect(mock$Tr).toHaveBeenNthCalledWith(1, "td.w_no.ucsShare");
@@ -339,7 +339,7 @@ describe("[PUT] /recent", () => {
         .mockResolvedValueOnce({ innerText: mock$TdNo })
         .mockResolvedValueOnce(null);
       mock$Tbody.mockResolvedValueOnce({ $: mock$Tr });
-      mock$.mockResolvedValueOnce({ $: mock$Tbody });
+      mock$Page.mockResolvedValueOnce({ $: mock$Tbody });
 
       const response = await recent(
         new HttpRequest({
@@ -356,7 +356,7 @@ describe("[PUT] /recent", () => {
 
       expect(response.status).toBe(200);
       expect(response.jsonBody).toStrictEqual({ recent: [], notification: [] });
-      expect(mock$).toHaveBeenCalledWith("tbody");
+      expect(mock$Page).toHaveBeenCalledWith("tbody");
       expect(mock$Tbody).toHaveBeenCalledWith("tr");
       expect(mock$Tr).toHaveBeenCalledTimes(2);
       expect(mock$Tr).toHaveBeenNthCalledWith(1, "td.w_no.ucsShare");
@@ -379,7 +379,7 @@ describe("[PUT] /recent", () => {
         .mockResolvedValueOnce({ innerText: mock$PName })
         .mockResolvedValueOnce(null);
       mock$Tbody.mockResolvedValueOnce({ $: mock$Tr });
-      mock$.mockResolvedValueOnce({ $: mock$Tbody });
+      mock$Page.mockResolvedValueOnce({ $: mock$Tbody });
 
       const response = await recent(
         new HttpRequest({
@@ -396,7 +396,7 @@ describe("[PUT] /recent", () => {
 
       expect(response.status).toBe(200);
       expect(response.jsonBody).toStrictEqual({ recent: [], notification: [] });
-      expect(mock$).toHaveBeenCalledWith("tbody");
+      expect(mock$Page).toHaveBeenCalledWith("tbody");
       expect(mock$Tbody).toHaveBeenCalledWith("tr");
       expect(mock$Tr).toHaveBeenCalledTimes(3);
       expect(mock$Tr).toHaveBeenNthCalledWith(1, "td.w_no.ucsShare");
@@ -423,7 +423,7 @@ describe("[PUT] /recent", () => {
         .mockResolvedValueOnce({ innerText: mock$PName })
         .mockResolvedValueOnce({ innerText: mock$TdUpload });
       mock$Tbody.mockResolvedValueOnce({ $: mock$Tr });
-      mock$.mockResolvedValueOnce({ $: mock$Tbody });
+      mock$Page.mockResolvedValueOnce({ $: mock$Tbody });
 
       const response = await recent(
         new HttpRequest({
@@ -440,7 +440,7 @@ describe("[PUT] /recent", () => {
 
       expect(response.status).toBe(200);
       expect(response.jsonBody).toStrictEqual({ recent: [], notification: [] });
-      expect(mock$).toHaveBeenCalledWith("tbody");
+      expect(mock$Page).toHaveBeenCalledWith("tbody");
       expect(mock$Tbody).toHaveBeenCalledWith("tr");
       expect(mock$Tr).toHaveBeenCalledTimes(3);
       expect(mock$Tr).toHaveBeenNthCalledWith(1, "td.w_no.ucsShare");
