@@ -336,7 +336,7 @@ describe("[PUT] /recent", () => {
 
     it("Should return empty recent ucs list and empty notifications if p.t1 is null", async () => {
       mock$Tr
-        .mockResolvedValueOnce({ $: mock$TdNo })
+        .mockResolvedValueOnce({ innerText: mock$TdNo })
         .mockResolvedValueOnce(null);
       mock$Tbody.mockResolvedValueOnce({ $: mock$Tr });
       mock$.mockResolvedValueOnce({ $: mock$Tbody });
@@ -371,6 +371,93 @@ describe("[PUT] /recent", () => {
       expect(mockNewContext).toHaveBeenCalled();
       expect(mockNewPage).toHaveBeenCalled();
       expect(mockWarn).toHaveBeenCalledWith("[maker: maker1] p.t1 is null.");
+    });
+
+    it("Should return empty recent ucs list and empty notifications if td.w_upload is null", async () => {
+      mock$Tr
+        .mockResolvedValueOnce({ innerText: mock$TdNo })
+        .mockResolvedValueOnce({ innerText: mock$PName })
+        .mockResolvedValueOnce(null);
+      mock$Tbody.mockResolvedValueOnce({ $: mock$Tr });
+      mock$.mockResolvedValueOnce({ $: mock$Tbody });
+
+      const response = await recent(
+        new HttpRequest({
+          ...httpRequestInitDefault,
+          body: {
+            string: JSON.stringify({
+              makers: ["maker1"],
+              prev: [],
+            }),
+          },
+        }),
+        invocationContext
+      );
+
+      expect(response.status).toBe(200);
+      expect(response.jsonBody).toStrictEqual({ recent: [], notification: [] });
+      expect(mock$).toHaveBeenCalledWith("tbody");
+      expect(mock$Tbody).toHaveBeenCalledWith("tr");
+      expect(mock$Tr).toHaveBeenCalledTimes(3);
+      expect(mock$Tr).toHaveBeenNthCalledWith(1, "td.w_no.ucsShare");
+      expect(mock$Tr).toHaveBeenNthCalledWith(2, "p.t1");
+      expect(mock$Tr).toHaveBeenNthCalledWith(3, "td.w_upload");
+      expect(mock$TdNo).toHaveBeenCalledTimes(0);
+      expect(mock$PName).toHaveBeenCalledTimes(0);
+      expect(mock$TdUpload).toHaveBeenCalledTimes(0);
+      expect(mockClose).toHaveBeenCalled();
+      expect(mockGoto).toHaveBeenCalledWith(
+        "https://ucs.piugame.com/ucs_share?s_type=maker&s_val=maker1"
+      );
+      expect(mockNewContext).toHaveBeenCalled();
+      expect(mockNewPage).toHaveBeenCalled();
+      expect(mockWarn).toHaveBeenCalledWith(
+        "[maker: maker1] td.w_upload is null."
+      );
+    });
+
+    it('Should return empty recent ucs list and empty notifications if "no" is not a number', async () => {
+      mock$TdNo.mockResolvedValueOnce("a");
+      mock$Tr
+        .mockResolvedValueOnce({ innerText: mock$TdNo })
+        .mockResolvedValueOnce({ innerText: mock$PName })
+        .mockResolvedValueOnce({ innerText: mock$TdUpload });
+      mock$Tbody.mockResolvedValueOnce({ $: mock$Tr });
+      mock$.mockResolvedValueOnce({ $: mock$Tbody });
+
+      const response = await recent(
+        new HttpRequest({
+          ...httpRequestInitDefault,
+          body: {
+            string: JSON.stringify({
+              makers: ["maker1"],
+              prev: [],
+            }),
+          },
+        }),
+        invocationContext
+      );
+
+      expect(response.status).toBe(200);
+      expect(response.jsonBody).toStrictEqual({ recent: [], notification: [] });
+      expect(mock$).toHaveBeenCalledWith("tbody");
+      expect(mock$Tbody).toHaveBeenCalledWith("tr");
+      expect(mock$Tr).toHaveBeenCalledTimes(3);
+      expect(mock$Tr).toHaveBeenNthCalledWith(1, "td.w_no.ucsShare");
+      expect(mock$Tr).toHaveBeenNthCalledWith(2, "p.t1");
+      expect(mock$Tr).toHaveBeenNthCalledWith(3, "td.w_upload");
+      expect(mock$TdNo).toHaveBeenCalled();
+      expect(mock$PName).toHaveBeenCalledTimes(0);
+      expect(mock$TdUpload).toHaveBeenCalledTimes(0);
+      expect(mockClose).toHaveBeenCalled();
+      expect(mockGoto).toHaveBeenCalledWith(
+        "https://ucs.piugame.com/ucs_share?s_type=maker&s_val=maker1"
+      );
+      expect(mockNewContext).toHaveBeenCalled();
+      expect(mockNewPage).toHaveBeenCalled();
+      expect(mockWarn).toHaveBeenCalledWith(
+        '[maker: maker1] Variable "no" is NaN.'
+      );
     });
   });
 });
