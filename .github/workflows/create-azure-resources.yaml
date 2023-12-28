@@ -66,11 +66,29 @@ jobs:
           npm ci
           popd
 
+      - name: Install Dependencies
+        run: |
+          pushd functions
+          npx jest test --coverage --coverageReporters="json-summary"
+          popd
+
       - name: Build
         run: |
           pushd functions
           npm run build
           popd
+
+      - name: Create Coverage Badges
+        uses: jaywcjlove/coverage-badges-cli@v1.2.5
+        with:
+          output: coverage/badges.svg
+          source: functions/coverage-summary.json
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./coverage
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
