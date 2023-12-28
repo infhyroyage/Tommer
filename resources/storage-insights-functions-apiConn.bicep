@@ -1,8 +1,8 @@
 // Parameters
 param apiConnAzureblobName string
 param apiConnOutlookName string
-// param functionsPlanName string
 param functionsName string
+param functionsPlanName string
 param insightsName string
 param storageName string
 
@@ -43,7 +43,7 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
 resource functionsPlan 'Microsoft.Web/serverfarms@2022-09-01' = {
   kind: 'linux'
   location: location
-  name: functionsName
+  name: functionsPlanName
   properties: {
     reserved: true
   }
