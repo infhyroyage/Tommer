@@ -48,9 +48,85 @@ local.settings.json
 
 ## Logic Apps Architecture
 
+Overall workflow is as follows:
+
 ![overall](docs/logic-apps-architecture/overall.png)
 
 ### Reccurrence
+
+![reccurrence](docs/logic-apps-architecture/reccurence.png)
+
+Trigger Logic Apps per 6 hours.
+
+### Set mail
+
+![set-mail](docs/logic-apps-architecture/set-mail.png)
+
+Set mail address of user which maintainer want to send.
+
+### Set makers
+
+![set-makers](docs/logic-apps-architecture/set-makers.png)
+
+Set string array of each UCS maker whose UCS maintainer want to trace and notificate.
+
+### Initialize Previous UCS List
+
+TODO
+
+### List Blobs at last-updated container
+
+TODO
+
+### Check only prev.json at last-updated container
+
+TODO
+
+### Get Content of prev.json
+
+TODO
+
+### Parse prev.json
+
+TODO
+
+### Update Previous UCS List
+
+TODO
+
+### Run Functions App
+
+TODO
+
+### Check Response Code of Functions App
+
+TODO
+
+### Terminate
+
+TODO
+
+### Parse Response Body of Functions App
+
+TODO
+
+### Check only prev.json Again at last-updated container
+
+TODO
+
+### Update Content of prev.json
+
+TODO
+
+### Create prev.json
+
+TODO
+
+### Check Notification UCS List
+
+TODO
+
+### Send Mail
 
 TODO
 
