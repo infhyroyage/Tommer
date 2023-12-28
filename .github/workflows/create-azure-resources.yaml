@@ -42,7 +42,7 @@ jobs:
               insightsName=${{ vars.AZURE_APPLICATION_INSIGHTS }} \
               storageName=${{ vars.AZURE_STORAGE }}
 
-  build-functions-app:
+  build-pages-and-functions-app:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -72,23 +72,22 @@ jobs:
           npx jest test --coverage --coverageReporters="json-summary"
           popd
 
-      - name: Build
-        run: |
-          pushd functions
-          npm run build
-          popd
-
       - name: Create Coverage Badges
         uses: jaywcjlove/coverage-badges-cli@v1.2.5
         with:
           output: public/badges.svg
           source: functions/coverage/coverage-summary.json
 
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Upload Coverage Badges Artifacts
+        uses: actions/upload-pages-artifact@v2
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
+          path: ./public
+
+      - name: Build
+        run: |
+          pushd functions
+          npm run build
+          popd
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
@@ -100,11 +99,22 @@ jobs:
             functions/package.json
             !functions/node_modules
 
+  deploy-pages:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build-pages-and-functions-app
+    steps:
+      - name: Deploy Coverage Badges
+        id: deployment
+        uses: actions/deploy-pages@v3
+
   deploy-functions-app:
     runs-on: ubuntu-latest
     needs:
       - create-without-logic-apps
-      - build-functions-app
+      - build-pages-and-functions-app
     steps:
       - name: Download Build Artifacts
         uses: actions/download-artifact@v4
