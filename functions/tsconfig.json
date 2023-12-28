@@ -13,5 +13,6 @@
     "rootDir": ".",
     "strict": true,
     "target": "es6"
-  }
+  },
+  "exclude": ["__tests__/**", "jest.config.ts"]
 }
