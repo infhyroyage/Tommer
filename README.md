@@ -35,18 +35,22 @@ local.settings.json
 
 ![architecture.drawio](./docs/azure-architecture/architecture.drawio.svg)
 
-| Type                 | Name                             | Description                                        |
-| -------------------- | -------------------------------- | -------------------------------------------------- |
-| Resource Group       | `AZURE_RESOURCE_GROUP`           | Resource Group with All Resources                  |
-| Logic Apps           | `AZURE_LOGIC_APP`                | Run Functions Apps and Save Recent UCS per 6 hours |
-| API Connection       | `AZURE_API_CONNECTION_AZUREBLOB` | Logic Apps Connection with BLOB Storage            |
-| API Connection       | `AZURE_API_CONNECTION_OUTLOOK`   | Logic Apps Connection with Outlook.com             |
-| Functions App        | `AZURE_FUNCTIONS`                | Trace and Notificate Recent UCS                    |
-| App Service Plan     | `AZURE_FUNCTIONS_PLAN`           | Consumption Plan of Functions App                  |
-| Storage Account      | `AZURE_STORAGE`                  | Store Previous UCS                                 |
-| Application insights | `AZURE_APPLICATION_INSIGHTS`     | Log Function Apps                                  |
+| Type                 | Name                             | Description                                           |
+| -------------------- | -------------------------------- | ----------------------------------------------------- |
+| Resource Group       | `AZURE_RESOURCE_GROUP`           | Resource Group with All Resources                     |
+| Logic Apps           | `AZURE_LOGIC_APP`                | Run Functions Apps and Save Recent UCS per 6 hours    |
+| API Connection       | `AZURE_API_CONNECTION_AZUREBLOB` | Logic Apps Connection with BLOB Storage               |
+| API Connection       | `AZURE_API_CONNECTION_OUTLOOK`   | Logic Apps Connection with Outlook.com                |
+| Functions App        | `AZURE_FUNCTIONS`                | Trace and Notificate Recent UCS                       |
+| App Service Plan     | `AZURE_FUNCTIONS_PLAN`           | Consumption Plan of Functions App                     |
+| Storage Account      | `AZURE_STORAGE`                  | Mount Runtime of Function Apps and Store Previous UCS |
+| Application insights | `AZURE_APPLICATION_INSIGHTS`     | Log Function Apps                                     |
 
 ## Logic Apps Architecture
+
+![overall](docs/logic-apps-architecture/overall.png)
+
+### Reccurrence
 
 TODO
 
