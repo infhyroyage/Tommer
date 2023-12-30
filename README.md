@@ -8,9 +8,29 @@
 
 Trace Recent UCS of Specified Makers and Nofiticate the Updates
 
-## Get Started
+## Getting Started
 
-TODO
+### 1. Activate Services
+
+1. Sign up the following two services:
+   - [Microsoft Azure](https://azure.microsoft.com) activated with Microsoft Entra tenant and Azure subscription.
+   - [GitHub](https://github.com)
+2. Get directory ID and subscription ID by [official reference](https://learn.microsoft.com/en-us/azure/azure-portal/get-subscription-tenant-id).
+
+### 2. Publish Service Principal
+
+1. Access [Azure Portal](https://portal.azure.com) and search Microsoft Entra ID:
+   ![publish-service-principal-1](./docs/getting-started/publish-service-principal-1.png)
+2. Access App Registrations > New registration
+3. Register a service principal by setting the any name and click "Register" button:
+   ![publish-service-principal-2](./docs/getting-started/publish-service-principal-2.png)
+4. Access Certificates & secrets > New client secret
+5. Register a client secret of a service principal by setting the any description and expires and click "Add" button
+6. Copy a value of a client secret:
+   ![publish-service-principal-3](./docs/getting-started/publish-service-principal-3.png)
+
+> [!WARNING]
+> A value of a client secret is only displayed immediately after the registration, so keep a copied value at hand.
 
 ---
 
