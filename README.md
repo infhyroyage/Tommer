@@ -55,18 +55,18 @@ Trace Recent UCS of Specified Makers and Nofiticate the Updates
 4. Click the "New repository variable" button from the "Variables" tab and set all variables as follows:
    | Name | Value |
    | ---- | ----- |
-   | AZURE_AD_SP_CONTRIBUTOR_CLIENT_ID | Copied client ID of service principal |
-   | AZURE_API_CONNECTION_AZUREBLOB | Name of Azure API Connection with BLOB Storage |
-   | AZURE_API_CONNECTION_OUTLOOK | Name of Azure API Connection with Outlook.com |
-   | AZURE_APPLICATION_INSIGHTS | Name of Azure Application Insights |
-   | AZURE_FUNCTIONS | Name of Azure Function Apps |
-   | AZURE_FUNCTIONS_PLAN | Name of Azure Function Apps' Plan |
-   | AZURE_LOCATION | Region of all Azure resources |
-   | AZURE_LOGIC_APP | Name of Azure Logic Apps |
-   | AZURE_RESOURCE_GROUP | Name of Azure Resource Group |
-   | AZURE_STORAGE | Globally unique Name of Azure Storage Account |
-   | AZURE_SUBSCRIPTION_ID | Copied Azure subscription ID |
-   | AZURE_TENANT_ID | Copied Microsoft Entra tenant ID |
+   | `AZURE_AD_SP_CONTRIBUTOR_CLIENT_ID` | Copied client ID of service principal |
+   | `AZURE_API_CONNECTION_AZUREBLOB` | Name of Azure API Connection with BLOB Storage |
+   | `AZURE_API_CONNECTION_OUTLOOK` | Name of Azure API Connection with Outlook.com |
+   | `AZURE_APPLICATION_INSIGHTS` | Name of Azure Application Insights |
+   | `AZURE_FUNCTIONS` | Name of Azure Function Apps |
+   | `AZURE_FUNCTIONS_PLAN` | Name of Azure Function Apps' Plan |
+   | `AZURE_LOCATION` | Region of all Azure resources |
+   | `AZURE_LOGIC_APP` | Name of Azure Logic Apps |
+   | `AZURE_RESOURCE_GROUP` | Name of Azure Resource Group |
+   | `AZURE_STORAGE` | Globally unique Name of Azure Storage Account |
+   | `AZURE_SUBSCRIPTION_ID` | Copied Azure subscription ID |
+   | `AZURE_TENANT_ID` | Copied Microsoft Entra tenant ID |
 5. Access Actions and run "Create Azure Resources" workflow.
 
 > [!WARNING]
