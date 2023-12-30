@@ -13,11 +13,11 @@ Trace Recent UCS of Specified Makers and Nofiticate the Updates
 ### 1. Activate Services
 
 1. Sign up the following two services:
-   - [Microsoft Azure](https://azure.microsoft.com) activated with Microsoft Entra tenant and Azure subscription.
+   - [Microsoft Azure](https://azure.microsoft.com) activated with a Microsoft Entra tenant and an Azure subscription.
    - [GitHub](https://github.com)
-2. Get directory ID and subscription ID by [official reference](https://learn.microsoft.com/en-us/azure/azure-portal/get-subscription-tenant-id).
+2. Get the directory ID and the subscription ID by [official reference](https://learn.microsoft.com/en-us/azure/azure-portal/get-subscription-tenant-id).
 
-### 2. Publish Service Principal
+### 2. Publish Service Principal and Secret
 
 1. Access [Azure Portal](https://portal.azure.com) and search Microsoft Entra ID:
    ![publish-service-principal-1](./docs/getting-started/publish-service-principal-1.png)
@@ -32,11 +32,22 @@ Trace Recent UCS of Specified Makers and Nofiticate the Updates
 > [!WARNING]
 > A value of a client secret is only displayed immediately after the registration, so keep a copied value at hand.
 
----
+### 3. Grant Service Principal to Deploy Azure Resources
 
-```
-az ad sp create-for-rbac --name Tommer_Contributor --role Contributor --scope /subscriptions/{Subscription ID}
-```
+1. Access [Azure Portal](https://portal.azure.com) and access "Subscription" of "Navigate":
+   ![grant-service-principal-1](./docs/getting-started/grant-service-principal-1.png)
+2. Access the subscription > Access control (IAM) > Add role assignment.
+3. Select "Privileged administrator roles" tab and "Contributor" role, then click "Next" button:
+   ![grant-service-principal-2](./docs/getting-started/grant-service-principal-2.png)
+4. Select "User, group, or service principal" in "Assign access to", click "Select Members", set and select the name of a service principal, click "Select" button and click "Review + assign" button:
+   ![grant-service-principal-3](./docs/getting-started/grant-service-principal-3.png)
+5. Click "Review + assign" button
+
+## Development
+
+TODO
+
+---
 
 local.settings.json
 
@@ -65,6 +76,17 @@ local.settings.json
 | App Service Plan     | `AZURE_FUNCTIONS_PLAN`           | Consumption Plan of Functions App                     |
 | Storage Account      | `AZURE_STORAGE`                  | Mount Runtime of Function Apps and Store Previous UCS |
 | Application insights | `AZURE_APPLICATION_INSIGHTS`     | Log Function Apps                                     |
+
+## Major Versions
+
+| Name       | Ver.    |
+| ---------- | ------- |
+| Node.js    | 20.10.0 |
+| Playwright | 1.40.1  |
+| Typescript | 5.1.6   |
+
+> [!NOTE]
+> All npm packages except above are maintained by dependabot in every Monday at 1:00(UTC).
 
 ## Logic Apps Architecture
 
@@ -149,17 +171,6 @@ TODO
 ### Send Mail
 
 TODO
-
-## Major Versions
-
-| Name       | Ver.    |
-| ---------- | ------- |
-| Node.js    | 20.10.0 |
-| Playwright | 1.40.1  |
-| Typescript | 5.1.6   |
-
-> [!NOTE]
-> All npm packages except above are maintained by dependabot in every Monday at 1:00(UTC).
 
 ## License
 
