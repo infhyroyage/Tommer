@@ -20,8 +20,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Run Bicep Linter
-        uses: synergy-au/bicep-lint-action@v1
+      - name: Lint Bicep
+        uses: synergy-au/bicep-lint-action@v1.1
         with:
           analyse-all-files: "true"
 
