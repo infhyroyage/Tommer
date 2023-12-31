@@ -1,7 +1,7 @@
 # Tommer
 
 [![Create Azure Resources](https://github.com/infhyroyage/Tommer/actions/workflows/create-azure-resources.yaml/badge.svg)](https://github.com/infhyroyage/Tommer/actions/workflows/create-azure-resources.yaml)
-[![Scan Javascript/Typescript by CodeQL](https://github.com/infhyroyage/Tommer/actions/workflows/codeql.yaml/badge.svg)](https://github.com/infhyroyage/Tommer/actions/workflows/codeql.yaml)
+[![Scan Javascript/Typescript by CodeQL](https://github.com/infhyroyage/Tommer/actions/workflows/scan-codeql.yaml/badge.svg)](https://github.com/infhyroyage/Tommer/actions/workflows/scan-codeql.yaml)
 ![coverage](https://infhyroyage.github.io/Tommer/badges.svg)
 
 ## Overview
@@ -162,11 +162,13 @@ Set mail address of user which maintainer want to send.
 
 ![set-makers](docs/logic-apps-architecture/set-makers.png)
 
-Set string array of each UCS maker whose UCS maintainer want to trace and notificate.
+Set string array of UCS maker whose UCS maintainer want to trace and notificate.
 
 ### Initialize Previous UCS List
 
-TODO
+![initialize-previous-ucs-list](docs/logic-apps-architecture/initialize-previous-ucs-list.png)
+
+Initialize string array of recent UCS at previous Logic Apps running.
 
 ### List Blobs at last-updated container
 
