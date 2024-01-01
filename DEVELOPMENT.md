@@ -77,11 +77,15 @@ Initialize string array of recent UCS at previous Logic Apps running.
 
 ### List Blobs at last-updated Container
 
-TODO
+![list-blobs](docs/logic-apps-architecture/list-blobs.png)
+
+Get the list of blobs at the `last-updated` container of BLOB Storage.
 
 ### Check only prev.json at last-updated Container
 
-TODO
+![check-prev-json](docs/logic-apps-architecture/check-prev-json.png)
+
+Update the previous UCS list if there is only a json file named prev.json in `last-updated` container of BLOB Storage.
 
 ### Get Content of prev.json
 
@@ -93,11 +97,15 @@ TODO
 
 ### Update Previous UCS List
 
-TODO
+![update-previous-ucs-list](docs/logic-apps-architecture/update-previous-ucs-list.png)
+
+Update a variable defined the previous UCS list.
 
 ### Run Functions App
 
-TODO
+![run-functions-app](docs/logic-apps-architecture/run-functions-app.png)
+
+Run Functions App which serves as \[PUT\] /recent. The type of the request body is defined in [functions/src/types.ts](https://github.com/infhyroyage/Tommer/blob/main/functions/src/types.ts).
 
 ### Check Response Code of Functions App
 
