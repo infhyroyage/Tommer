@@ -59,7 +59,7 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
           }
           type: 'InitializeVariable'
         }
-        'List Blobs at last-updated container': {
+        'List Blobs at last-updated Container': {
           inputs: {
             host: {
               connection: {
@@ -76,7 +76,7 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
           }
           type: 'ApiConnection'
         }
-        'Check only prev.json at last-updated container': {
+        'Check only prev.json at last-updated Container': {
           actions: {
             'Get Content of prev.json': {
               inputs: {
@@ -144,20 +144,20 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
             and: [
               {
                 equals: [
-                  '@length(body(\'List Blobs at last-updated container\')?[\'value\'])'
+                  '@length(body(\'List Blobs at last-updated Container\')?[\'value\'])'
                   1
                 ]
               }
               {
                 equals: [
-                  '@body(\'List Blobs at last-updated container\')?[\'value\'][0][\'Name\']'
+                  '@body(\'List Blobs at last-updated Container\')?[\'value\'][0][\'Name\']'
                   1
                 ]
               }
             ]
           }
           runAfter: {
-            'List Blobs at last-updated container': [
+            'List Blobs at last-updated Container': [
               'Succeeded'
             ]
           }
@@ -175,7 +175,7 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
             method: 'PUT'
           }
           runAfter: {
-            'Check only prev.json at last-updated container': [
+            'Check only prev.json at last-updated Container': [
               'Succeeded'
             ]
           }
@@ -281,7 +281,7 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
           }
           type: 'ParseJson'
         }
-        'Check only prev.json Again at last-updated container': {
+        'Check only prev.json Again at last-updated Container': {
           actions: {
             'Update Content of prev.json': {
               inputs: {
@@ -334,13 +334,13 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
             and: [
               {
                 equals: [
-                  '@length(body(\'List Blobs at last-updated container\')?[\'value\'])'
+                  '@length(body(\'List Blobs at last-updated Container\')?[\'value\'])'
                   1
                 ]
               }
               {
                 equals: [
-                  '@body(\'List Blobs at last-updated container\')?[\'value\'][0][\'Name\']'
+                  '@body(\'List Blobs at last-updated Container\')?[\'value\'][0][\'Name\']'
                   1
                 ]
               }

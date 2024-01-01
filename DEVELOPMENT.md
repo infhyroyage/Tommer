@@ -75,11 +75,11 @@ Set string array of UCS maker whose UCS maintainer want to trace and notificate.
 
 Initialize string array of recent UCS at previous Logic Apps running.
 
-### List Blobs at last-updated container
+### List Blobs at last-updated Container
 
 TODO
 
-### Check only prev.json at last-updated container
+### Check only prev.json at last-updated Container
 
 TODO
 
@@ -111,7 +111,7 @@ TODO
 
 TODO
 
-### Check only prev.json Again at last-updated container
+### Check only prev.json Again at last-updated Container
 
 TODO
 
