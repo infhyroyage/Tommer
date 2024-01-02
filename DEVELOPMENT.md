@@ -55,25 +55,28 @@ Overall workflow is as follows:
 
 ![reccurrence](docs/logic-apps-architecture/reccurence.png)
 
-Trigger Logic Apps per 6 hours.
+Trigger running Logic Apps per 6 hours.
 
 ### Set mail
 
 ![set-mail](docs/logic-apps-architecture/set-mail.png)
 
-Set mail address of user which maintainer want to send.
+Set a string of the user's email address which maintainer want to send.
 
 ### Set makers
 
 ![set-makers](docs/logic-apps-architecture/set-makers.png)
 
-Set string array of UCS maker whose UCS maintainer want to trace and notificate.
+Set a string array of UCS maker whose UCS maintainer want to trace and notificate.
 
 ### Initialize Previous UCS List
 
 ![initialize-previous-ucs-list](docs/logic-apps-architecture/initialize-previous-ucs-list.png)
 
-Initialize string array of recent UCS at previous Logic Apps running.
+Initialize a array of UCS at the previous Logic Apps running. The UCS is defined in [functions/src/types.ts](https://github.com/infhyroyage/Tommer/blob/main/functions/src/types.ts).
+
+> [!NOTE]
+> The array of UCS is called "UCS List" as below.
 
 ### List Blobs at last-updated Container
 
@@ -85,21 +88,25 @@ Get the list of blobs at the `last-updated` container of BLOB Storage.
 
 ![check-prev-json](docs/logic-apps-architecture/check-prev-json.png)
 
-Update the previous UCS list if there is only a json file named prev.json in `last-updated` container of BLOB Storage.
+Check whther there is only a json file named prev.json in `last-updated` container of BLOB Storage.
 
 ### Get Content of prev.json
 
-TODO
+![get-prev-json](./docs/logic-apps-architecture/get-prev-json.png)
+
+Get a base64 encoded string which is composed from a content of prev.json.
 
 ### Parse prev.json
 
-TODO
+![parse-prev-json](./docs/logic-apps-architecture/parse-prev-json.png)
+
+Decode from a base64 encoded string to a json content of prev.json. The json type is equal to the UCS List.
 
 ### Update Previous UCS List
 
 ![update-previous-ucs-list](docs/logic-apps-architecture/update-previous-ucs-list.png)
 
-Update a variable defined the previous UCS list.
+Update a variable of the UCS List at the previous Logic Apps running.
 
 ### Run Functions App
 
@@ -109,32 +116,48 @@ Run Functions App which serves as \[PUT\] /recent. The type of the request body 
 
 ### Check Response Code of Functions App
 
-TODO
+![check-response-code](./docs/logic-apps-architecture/check-response-code.png)
+
+Check whether the Functions App running is valid. If it is invalid, the Logic Apps running is also regarded as invalid.
 
 ### Terminate
 
-TODO
+![terminate](./docs/logic-apps-architecture/terminate.png)
+
+Abort the Logic Apps Running regarded as invalid.
 
 ### Parse Response Body of Functions App
 
-TODO
+![parse-response-body](./docs/logic-apps-architecture/parse-response-body.png)
 
-### Check only prev.json Again at last-updated Container
-
-TODO
-
-### Update Content of prev.json
-
-TODO
-
-### Create prev.json
-
-TODO
+Parse from the response body of the Functions App running to the object. The type of the response body is defined in [functions/src/types.ts](https://github.com/infhyroyage/Tommer/blob/main/functions/src/types.ts).
 
 ### Check Notification UCS List
 
-TODO
+![check-notifications](./docs/logic-apps-architecture/check-notifications.png)
+
+Check whether there is any notifications in the response body of the Functions App running. If the number of notifications is over 1, the Logic Apps is going to send a email to the user.
 
 ### Send Mail
 
-TODO
+![send-mail](./docs/logic-apps-architecture/send-mail.png)
+
+Send email with the subject of the Logic Apps workfow's ID and the body of notifications in the response body of the Functions App running.
+
+### Check only prev.json Again at last-updated Container
+
+![check-prev-json-again](./docs/logic-apps-architecture/check-prev-json-again.png)
+
+Check again in "Check only prev.json at last-updated Container".
+
+### Update Content of prev.json
+
+![update-prev-json](./docs/logic-apps-architecture/update-prev-json.png)
+
+Update prev.json in `last-updated` container of BLOB Storage. The UCS List is composed by the response body of the Functions App running.
+
+### Create prev.json
+
+![create-prev-json](./docs/logic-apps-architecture/create-prev-json.png)
+
+Create prev.json in `last-updated` container of BLOB Storage. The UCS List is composed by the response body of the Functions App running.
