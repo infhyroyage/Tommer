@@ -93,7 +93,7 @@
 
 ## Development
 
-See [Developer's Guide](DEVELOPMENT.md)
+See [Developer's Guide](./docs/DEVELOPMENT.md)
 
 ## License
 
