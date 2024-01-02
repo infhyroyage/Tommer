@@ -2,24 +2,30 @@
 
 ## Installation
 
+1. Install at your local environment as follows:
+   - [Node.js](https://nodejs.org) (Over v20.x.x)
+   - [Azure Functions Core Tools](https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local) (Over v4.x)
+2. Fork this repository and clone it.
+3. Move to `functions` directory and install NPM packages as follows:
+   ```bash
+   cd functions
+   npm i
+   ```
+4. Create a new json file at `functions` directory named local.settings.json whose content is:
+   ```json
+   {
+     "IsEncrypted": false,
+     "Values": {
+       "FUNCTIONS_WORKER_RUNTIME": "node"
+     }
+   }
+   ```
+
+## Development
+
 TODO
 
----
-
-local.settings.json
-
-```json
-{
-  "IsEncrypted": false,
-  "Values": {
-    "FUNCTIONS_WORKER_RUNTIME": "node"
-  }
-}
-```
-
----
-
-## Package Version
+## NPM Package Version
 
 | Name       | Ver.    |
 | ---------- | ------- |
