@@ -63,6 +63,7 @@
    | `AZURE_STORAGE` | Globally unique Name of Azure Storage Account |
    | `AZURE_SUBSCRIPTION_ID` | Copied Azure subscription ID |
    | `AZURE_TENANT_ID` | Copied Microsoft Entra tenant ID |
+   | `AZURE_WORKSPACES` | Name of Azure Log Analytics Workspaces |
 5. Access Actions and run "Create Azure Resources" workflow.
 
 > [!WARNING]

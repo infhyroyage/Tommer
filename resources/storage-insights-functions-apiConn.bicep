@@ -5,6 +5,7 @@ param functionsName string
 param functionsPlanName string
 param insightsName string
 param storageName string
+param workspacesName string
 
 param location string = resourceGroup().location
 
@@ -30,12 +31,22 @@ resource container 'Microsoft.Storage/storageAccounts/blobServices/containers@20
 }
 
 // Deploy Application Insights
+resource workspaces 'Microsoft.OperationalInsights/workspaces@2022-10-01' = {
+  location: location
+  name: workspacesName
+  properties: {
+    sku: {
+      name: 'PerGB2018'
+    }
+  }
+}
 resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
   kind: 'web'
   location: location
   name: insightsName
   properties: {
     Application_Type: 'web'
+    WorkspaceResourceId: workspaces.id
   }
 }
 

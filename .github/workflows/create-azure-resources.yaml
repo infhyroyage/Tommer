@@ -47,7 +47,8 @@ jobs:
               functionsName=${{ vars.AZURE_FUNCTIONS }} \
               functionsPlanName=${{ vars.AZURE_FUNCTIONS_PLAN }} \
               insightsName=${{ vars.AZURE_APPLICATION_INSIGHTS }} \
-              storageName=${{ vars.AZURE_STORAGE }}
+              storageName=${{ vars.AZURE_STORAGE }} \
+              workspacesName=${{ vars.AZURE_WORKSPACES }}
 
   build-pages-and-functions-app:
     runs-on: ubuntu-latest
