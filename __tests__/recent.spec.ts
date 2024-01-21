@@ -1,5 +1,5 @@
 import { HttpRequest, HttpRequestInit } from "@azure/functions";
-import { recent } from "../src/recent";
+import { recent } from "../functions/recent";
 import { Browser, Page, chromium } from "playwright-chromium";
 
 const httpRequestInitDefault: HttpRequestInit = {

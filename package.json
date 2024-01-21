@@ -1,14 +1,14 @@
 {
   "name": "tommer",
   "version": "1.0.0",
-  "main": "dist/src/index.js",
+  "main": "dist/functions/index.js",
   "scripts": {
     "build": "tsc",
     "prestart": "npm run build",
     "start": "func start --verbose",
     "test": "jest",
     "watch": "tsc -w",
-    "lint": "eslint 'src/*.ts'"
+    "lint": "eslint 'functions/*.ts'"
   },
   "dependencies": {
     "@azure/functions": "^4.1.0",

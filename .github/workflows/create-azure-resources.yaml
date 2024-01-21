@@ -5,9 +5,15 @@ on:
     branches:
       - main
     paths:
+      - __tests__**
+      - .funcignore
       - .github/workflows/create-azure-resources.yaml
       - functions**
+      - host.json
+      - jest.config.json
+      - package*.json
       - resources**
+      - tsconfig.json
 
 env:
   NODE_VERSION: "20.10.0"
@@ -69,22 +75,16 @@ jobs:
           restore-keys: ${{ runner.os }}-tommer-${{ hashFiles('**/package-lock.json') }}-
 
       - name: Install Dependencies
-        run: |
-          pushd functions
-          npm ci
-          popd
+        run: npm ci
 
       - name: Test
-        run: |
-          pushd functions
-          npx jest test --coverage --coverageReporters="json-summary"
-          popd
+        run: npx jest test --coverage --coverageReporters="json-summary"
 
       - name: Create Coverage Badges
         uses: jaywcjlove/coverage-badges-cli@v1.2.5
         with:
           output: public/badges.svg
-          source: functions/coverage/coverage-summary.json
+          source: coverage/coverage-summary.json
 
       - name: Upload Coverage Badges Artifacts
         uses: actions/upload-pages-artifact@v3
@@ -92,20 +92,17 @@ jobs:
           path: ./public
 
       - name: Build
-        run: |
-          pushd functions
-          npm run build
-          popd
+        run: npm run build
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: ${{ vars.AZURE_FUNCTIONS }}
           path: |
-            functions/dist
-            functions/host.json
-            functions/package.json
-            !functions/node_modules
+            dist
+            host.json
+            package.json
+            !node_modules
 
   deploy-pages:
     environment:

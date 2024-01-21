@@ -1,0 +1,13 @@
+__tests__
+.eslintrc.yaml
+.git
+.github
+.gitignore
+docs
+functions
+jest.config.ts
+LICENSE
+package*.json
+README.md
+resources
+tsconfig.json

@@ -1,5 +1,0 @@
-__tests__
-.eslintrc.yaml
-jest.config.ts
-src
-tsconfig.json

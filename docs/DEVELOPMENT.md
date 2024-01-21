@@ -25,12 +25,11 @@ You can construct the local development environment for Functions App.
    - [Node.js](https://nodejs.org) (Over v20.x.x)
    - [Azure Functions Core Tools](https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local) (Over v4.x)
 2. Fork this repository and clone it.
-3. Move to `functions` directory and install NPM packages:
+3. Install NPM packages:
    ```bash
-   cd functions
    npm i
    ```
-4. Create a new json file at `functions` directory named local.settings.json whose content is:
+4. Create a new json file at the root directory named local.settings.json whose content is:
    ```json
    {
      "IsEncrypted": false,
@@ -55,18 +54,14 @@ You can construct the local development environment for Functions App.
 
 1. Run the typescript compiler with file-watching mode:
    ```bash
-   cd functions
    npm run watch
    ```
 2. Run Azure Functions Core Tools at another terminal:
    ```bash
-   cd functions
    npm run start
    ```
-3. Develop at `functions` directory.
-4. Run lint and test at another terminal:
+3. After development, run lint and test at another terminal:
    ```bash
-   cd functions
    npm run lint
    npm run test
    ```
@@ -99,7 +94,7 @@ Set a string array of UCS maker whose UCS maintainer want to trace and notificat
 
 ![initialize-previous-ucs-list](./logic-apps-development/initialize-previous-ucs-list.png)
 
-Initialize a array of UCS at the previous Logic Apps running. The UCS is defined in [functions/src/types.ts](https://github.com/infhyroyage/Tommer/blob/main/functions/src/types.ts).
+Initialize a array of UCS at the previous Logic Apps running. The UCS is defined in [functions/types.ts](https://github.com/infhyroyage/Tommer/blob/main/functions/types.ts).
 
 > [!NOTE]
 > The array of UCS is called "UCS List" as below.
@@ -138,7 +133,7 @@ Update a variable of the UCS List at the previous Logic Apps running.
 
 ![run-functions-app](./logic-apps-development/run-functions-app.png)
 
-Run Functions App which serves as \[PUT\] /recent. The type of the request body is defined in [functions/src/types.ts](https://github.com/infhyroyage/Tommer/blob/main/functions/src/types.ts).
+Run Functions App which serves as \[PUT\] /recent. The type of the request body is defined in [functions/types.ts](https://github.com/infhyroyage/Tommer/blob/main/functions/types.ts).
 
 ### Check Response Code of Functions App
 
@@ -156,7 +151,7 @@ Abort the Logic Apps Running regarded as invalid.
 
 ![parse-response-body](./logic-apps-development/parse-response-body.png)
 
-Parse from the response body of the Functions App running to the object. The type of the response body is defined in [functions/src/types.ts](https://github.com/infhyroyage/Tommer/blob/main/functions/src/types.ts).
+Parse from the response body of the Functions App running to the object. The type of the response body is defined in [functions/types.ts](https://github.com/infhyroyage/Tommer/blob/main/functions/types.ts).
 
 ### Check Notification UCS List
 
