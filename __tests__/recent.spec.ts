@@ -1,43 +1,44 @@
 import { HttpRequest, HttpRequestInit } from "@azure/functions";
+import { chromium } from "playwright-chromium";
+import { Mock, beforeEach, describe, expect, it, vi } from "vitest";
 import { recent } from "../functions/recent";
-import { Browser, Page, chromium } from "playwright-chromium";
 
 const httpRequestInitDefault: HttpRequestInit = {
   url: "http://localhost:7071/api/recent",
   method: "put",
 };
 
-jest.mock("playwright-chromium");
+vi.mock("playwright-chromium");
 
 describe("[PUT] /recent", () => {
-  const mockWarn = jest.fn();
+  const mockWarn = vi.fn();
 
   const invocationContext = {
-    debug: jest.fn(),
-    error: jest.fn(),
+    debug: vi.fn(),
+    error: vi.fn(),
     extraInputs: {
-      get: jest.fn(),
-      set: jest.fn(),
+      get: vi.fn(),
+      set: vi.fn(),
     },
     extraOutputs: {
-      get: jest.fn(),
-      set: jest.fn(),
+      get: vi.fn(),
+      set: vi.fn(),
     },
     functionName: "functionName",
-    info: jest.fn(),
+    info: vi.fn(),
     invocationId: "invocationId",
-    log: jest.fn(),
+    log: vi.fn(),
     options: {
       trigger: { type: "type", name: "name" },
       extraInputs: [],
       extraOutputs: [],
     },
-    trace: jest.fn(),
+    trace: vi.fn(),
     warn: mockWarn,
   };
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
   });
 
   describe("Validation", () => {
@@ -175,28 +176,28 @@ describe("[PUT] /recent", () => {
   });
 
   describe("Scraping", () => {
-    const mock$Page = jest.fn();
-    const mock$Tbody = jest.fn();
-    const mock$Tr = jest.fn();
-    const mock$TdNo = jest.fn();
-    const mock$PName = jest.fn();
-    const mock$TdUpload = jest.fn();
-    const mockClose = jest.fn();
-    const mockGoto = jest.fn();
-    const mockNewContext = jest.fn();
-    const mockNewPage = jest.fn();
+    const mock$Page = vi.fn();
+    const mock$Tbody = vi.fn();
+    const mock$Tr = vi.fn();
+    const mock$TdNo = vi.fn();
+    const mock$PName = vi.fn();
+    const mock$TdUpload = vi.fn();
+    const mockClose = vi.fn();
+    const mockGoto = vi.fn();
+    const mockNewContext = vi.fn();
+    const mockNewPage = vi.fn();
 
     beforeEach(() => {
       // Mock playwright-chromium
-      (chromium.launch as jest.Mock).mockResolvedValue({
+      (chromium.launch as Mock).mockResolvedValue({
         newContext: mockNewContext.mockResolvedValue({
           newPage: mockNewPage.mockResolvedValue({
             goto: mockGoto,
             $: mock$Page,
-          } as unknown as jest.Mocked<Page>),
+          }),
         }),
         close: mockClose,
-      } as unknown as jest.Mocked<Browser>);
+      });
     });
 
     it("Should return empty recent ucs list and empty notifications if previous ucs and maker are empty", async () => {

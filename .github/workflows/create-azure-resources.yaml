@@ -10,10 +10,10 @@ on:
       - .github/workflows/create-azure-resources.yaml
       - functions**
       - host.json
-      - jest.config.json
       - package*.json
       - resources**
       - tsconfig.json
+      - vitest.config.json
 
 env:
   NODE_VERSION: "20.10.0"
@@ -78,7 +78,7 @@ jobs:
         run: npm ci
 
       - name: Test
-        run: npx jest test --coverage --coverageReporters="json-summary"
+        run: npx vitest --coverage.enabled --coverage.reporter=json-summary
 
       - name: Create Coverage Badges
         uses: jaywcjlove/coverage-badges-cli@v1.2.5
