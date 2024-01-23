@@ -5,9 +5,9 @@ __tests__
 .gitignore
 docs
 functions
-jest.config.ts
 LICENSE
 package*.json
 README.md
 resources
 tsconfig.json
+vitest.config.ts

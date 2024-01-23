@@ -72,11 +72,5 @@ jobs:
           key: ${{ runner.os }}-tommer-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
           restore-keys: ${{ runner.os }}-tommer-${{ hashFiles('**/package-lock.json') }}-
 
-      - name: Find Current Pull Request
-        uses: jwalton/gh-find-current-pr@v1.3.2
-        id: findPr
-
-      - name: Jest coverage report
-        uses: ArtiomTr/jest-coverage-report-action@v2.2.6
-        with:
-          prnumber: ${{ steps.findPr.outputs.number }}
+      - name: Report Coverage
+        uses: davelosert/vitest-coverage-report-action@v2

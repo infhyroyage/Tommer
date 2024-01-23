@@ -14,5 +14,5 @@
     "strict": true,
     "target": "es6"
   },
-  "exclude": ["__tests__/**", "jest.config.ts"]
+  "exclude": ["__tests__/**", "vitest.config.ts"]
 }
