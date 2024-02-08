@@ -1,0 +1,56 @@
+name: Deploy Azure Functions Application (Reusable Workflow)
+
+on:
+  workflow_call:
+    inputs:
+      AZURE_AD_SP_CONTRIBUTOR_CLIENT_ID:
+        required: true
+        type: string
+      AZURE_SUBSCRIPTION_ID:
+        required: true
+        type: string
+      AZURE_TENANT_ID:
+        required: true
+        type: string
+      FUNCTIONS_NAME:
+        required: true
+        type: string
+      NODE_VERSION:
+        default: "20.10.0"
+        required: false
+        type: string
+    secrets:
+      AZURE_AD_SP_CONTRIBUTOR_CLIENT_SECRET:
+        required: true
+
+jobs:
+  deploy-functions-app:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.FUNCTIONS_NAME }}
+
+      - name: Setup Node ${{ inputs.NODE_VERSION }} Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.NODE_VERSION }}
+
+      # Install playwright-chromium and Chromium browser at the same time
+      # Default installation path is ~/.cache, so overwrite it with PLAYWRIGHT_BROWSERS_PATH
+      - name: Install Dependencies and Chromium
+        run: npm install --production
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: ./browser
+
+      - name: Login Azure as Contributor
+        uses: azure/login@v1
+        with:
+          creds: '{"clientId":"${{ inputs.AZURE_AD_SP_CONTRIBUTOR_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_AD_SP_CONTRIBUTOR_CLIENT_SECRET }}","subscriptionId":"${{ inputs.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ inputs.AZURE_TENANT_ID }}"}'
+
+      - name: Deploy Azure Functions Application
+        uses: Azure/functions-action@v1.5.1
+        with:
+          app-name: ${{ inputs.FUNCTIONS_NAME }}
+          package: .

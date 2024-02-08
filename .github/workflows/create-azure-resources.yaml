@@ -56,101 +56,30 @@ jobs:
               storageName=${{ vars.AZURE_STORAGE }} \
               workspacesName=${{ vars.AZURE_WORKSPACES }}
 
-  build-pages-and-functions-app:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@main
+  use-build-pages-and-functions-app-workflow:
+    uses: ./.github/workflows/reusable-build-pages-and-functions-app.yaml
+    with:
+      FUNCTIONS_NAME: ${{ vars.AZURE_FUNCTIONS }}
 
-      - name: Setup Node ${{ env.NODE_VERSION }} Environment
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
+  use-deploy-pages-workflow:
+    needs: use-build-pages-and-functions-app-workflow
+    uses: ./.github/workflows/reusable-deploy-pages.yaml
 
-      - name: Restore Cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-tommer-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
-          restore-keys: ${{ runner.os }}-tommer-${{ hashFiles('**/package-lock.json') }}-
-
-      - name: Install Dependencies
-        run: npm ci
-
-      - name: Test
-        run: npx vitest --coverage.enabled --coverage.reporter=json-summary
-
-      - name: Create Coverage Badges
-        uses: jaywcjlove/coverage-badges-cli@v1.2.5
-        with:
-          output: public/badges.svg
-          source: coverage/coverage-summary.json
-
-      - name: Upload Coverage Badges Artifacts
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./public
-
-      - name: Build
-        run: npm run build
-
-      - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ vars.AZURE_FUNCTIONS }}
-          path: |
-            dist
-            host.json
-            package.json
-            !node_modules
-
-  deploy-pages:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build-pages-and-functions-app
-    steps:
-      - name: Deploy Coverage Badges
-        id: deployment
-        uses: actions/deploy-pages@v4
-
-  deploy-functions-app:
-    runs-on: ubuntu-latest
+  use-deploy-functions-app-workflow:
     needs:
       - create-without-logic-apps
-      - build-pages-and-functions-app
-    steps:
-      - name: Download Build Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ vars.AZURE_FUNCTIONS }}
-
-      - name: Setup Node ${{ env.NODE_VERSION }} Environment
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      # Install playwright-chromium and Chromium browser at the same time
-      # Default installation path is ~/.cache, so overwrite it with PLAYWRIGHT_BROWSERS_PATH
-      - name: Install Dependencies and Chromium
-        run: npm install --production
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: ./browser
-
-      - name: Login Azure as Contributor
-        uses: azure/login@v1
-        with:
-          creds: '{"clientId":"${{ vars.AZURE_AD_SP_CONTRIBUTOR_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_AD_SP_CONTRIBUTOR_CLIENT_SECRET }}","subscriptionId":"${{ vars.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ vars.AZURE_TENANT_ID }}"}'
-
-      - name: Deploy Azure Functions Application
-        uses: Azure/functions-action@v1.5.1
-        with:
-          app-name: ${{ vars.AZURE_FUNCTIONS }}
-          package: .
+      - use-build-pages-and-functions-app-workflow
+    uses: ./.github/workflows/reusable-deploy-functions-app.yaml
+    with:
+      AZURE_AD_SP_CONTRIBUTOR_CLIENT_ID: ${{ vars.AZURE_AD_SP_CONTRIBUTOR_CLIENT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+      FUNCTIONS_NAME: ${{ vars.AZURE_FUNCTIONS }}
+    secrets:
+      AZURE_AD_SP_CONTRIBUTOR_CLIENT_SECRET: ${{ secrets.AZURE_AD_SP_CONTRIBUTOR_CLIENT_SECRET }}
 
   create-logic-apps:
-    needs: deploy-functions-app
+    needs: use-deploy-functions-app-workflow
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
