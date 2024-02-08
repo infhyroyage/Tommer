@@ -1,0 +1,45 @@
+name: Build and Deploy Azure Functions Application
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - __tests__**
+      - .funcignore
+      - .github/workflows/build-deploy-functions-app.yaml
+      - .github/workflows/reusable-build-pages-and-functions-app.yaml
+      - .github/workflows/reusable-deploy-functions-app.yaml
+      - .github/workflows/reusable-deploy-pages.yaml
+      - functions**
+      - host.json
+      - package*.json
+      - tsconfig.json
+      - vitest.config.json
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  use-build-pages-and-functions-app-workflow:
+    uses: ./.github/workflows/reusable-build-pages-and-functions-app.yaml
+    with:
+      FUNCTIONS_NAME: ${{ vars.AZURE_FUNCTIONS }}
+
+  use-deploy-pages-workflow:
+    needs: use-build-pages-and-functions-app-workflow
+    uses: ./.github/workflows/reusable-deploy-pages.yaml
+
+  use-deploy-functions-app-workflow:
+    needs: use-build-pages-and-functions-app-workflow
+    uses: ./.github/workflows/reusable-deploy-functions-app.yaml
+    with:
+      AZURE_AD_SP_CONTRIBUTOR_CLIENT_ID: ${{ vars.AZURE_AD_SP_CONTRIBUTOR_CLIENT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+      FUNCTIONS_NAME: ${{ vars.AZURE_FUNCTIONS }}
+    secrets:
+      AZURE_AD_SP_CONTRIBUTOR_CLIENT_SECRET: ${{ secrets.AZURE_AD_SP_CONTRIBUTOR_CLIENT_SECRET }}
