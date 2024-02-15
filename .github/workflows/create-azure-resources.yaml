@@ -91,6 +91,12 @@ jobs:
         with:
           path: ./public
 
+      - name: Generate Swagger UI
+        uses: Legion2/swagger-ui-action@v1.2.0
+        with:
+          output: public
+          spec-file: swagger.yaml
+
       - name: Build
         run: npm run build
 
