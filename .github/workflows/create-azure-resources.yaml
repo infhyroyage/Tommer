@@ -87,16 +87,16 @@ jobs:
           output: public/badges.svg
           source: coverage/coverage-summary.json
 
-      - name: Upload Coverage Badges Artifacts
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./public
-
       - name: Generate Swagger UI
         uses: Legion2/swagger-ui-action@v1.2.0
         with:
           output: public
           spec-file: swagger.yaml
+
+      - name: Upload Coverage Badges and Swagger UI Artifacts
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./public
 
       - name: Build
         run: npm run build
