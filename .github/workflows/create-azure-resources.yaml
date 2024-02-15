@@ -12,6 +12,7 @@ on:
       - host.json
       - package*.json
       - resources**
+      - swagger.yaml
       - tsconfig.json
       - vitest.config.json
 
