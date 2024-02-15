@@ -1,0 +1,79 @@
+openapi: 3.0.1
+info:
+  title: Tommer API
+  version: 1.0.0
+  description: API Reference invoked by Azure Logic Apps
+servers:
+  - url: "{TODO}/api"
+    description: Azure Functions HTTP Trigger
+paths:
+  /recent:
+    put:
+      summary: API for retrieving recent UCS list
+      description: Retrieve the recent UCS list of the specified UCS maker list and add it to the notification list if there is an update.
+      operationId: putRecent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PutRecentReq"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PutRecentRes"
+        400:
+          description: Bad Request
+        500:
+          description: Internal Server Error
+components:
+  schemas:
+    PutRecentReq:
+      type: object
+      properties:
+        makers:
+          type: array
+          items:
+            type: string
+          description: UCS Maker Name List
+        prev:
+          type: array
+          items:
+            $ref: "#/components/schemas/Ucs"
+          description: Previous UCS List
+    PutRecentRes:
+      type: object
+      properties:
+        recent:
+          type: array
+          items:
+            $ref: "#/components/schemas/Ucs"
+          description: Recent UCS List
+        notification:
+          type: array
+          items:
+            $ref: "#/components/schemas/Ucs"
+          description: Notification UCS List
+    Ucs:
+      type: object
+      properties:
+        maker:
+          type: string
+          description: UCS Maker Name
+        no:
+          type: integer
+          description: UCS Number
+        name:
+          type: string
+          description: Song Name
+        upload:
+          type: string
+          description: Uploaded Date
+      required:
+        - maker
+        - no
+        - name
+        - upload

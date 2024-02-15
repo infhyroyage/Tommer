@@ -3,7 +3,7 @@
  */
 export type PutRecentReq = {
   /**
-   * UCS Maker Name
+   * UCS Maker Name List
    */
   makers: string[];
 
