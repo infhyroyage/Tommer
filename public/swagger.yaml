@@ -3,9 +3,6 @@ info:
   title: Tommer API
   version: 1.0.0
   description: API Reference invoked by Azure Logic Apps
-servers:
-  - url: "{TODO}/api"
-    description: Azure Functions HTTP Trigger
 paths:
   /recent:
     put:
