@@ -11,7 +11,7 @@
     "lint": "eslint '**/*.{ts,tsx}'"
   },
   "dependencies": {
-    "@azure/functions": "^4.2.0",
+    "@azure/functions": "^4.3.0",
     "playwright-chromium": "^1.40.1"
   },
   "devDependencies": {
