@@ -25,6 +25,10 @@
 6. Register a client secret of a registered service principal by setting the any description and expires and click "Add" button
 7. Copy a client secret value:
    ![publish-service-principal-3](./docs/getting-started/publish-service-principal-3.png)
+8. Access Overview > Managed application in local directory:
+   ![publish-service-principal-4](./docs/getting-started/publish-service-principal-4.png)
+9. Access Properties and Turn "Visible to users?" on:
+   ![publish-service-principal-5](./docs/getting-started/publish-service-principal-5.png)
 
 > [!WARNING]
 > A client secret value is only displayed immediately after the registration, so keep a copied one at hand.
