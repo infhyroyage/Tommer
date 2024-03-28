@@ -44,18 +44,20 @@ jobs:
             -l ${{ vars.AZURE_LOCATION }}
 
       - name: Deploy Azure Resources without Logic Apps
-        run: |
-          az deployment group create \
-            --resource-group ${{ vars.AZURE_RESOURCE_GROUP }} \
-            --template-file resources/storage-insights-functions-apiConn.bicep \
-            --parameters \
-              apiConnAzureblobName=${{ vars.AZURE_API_CONNECTION_AZUREBLOB }} \
-              apiConnOutlookName=${{ vars.AZURE_API_CONNECTION_OUTLOOK }} \
-              functionsName=${{ vars.AZURE_FUNCTIONS }} \
-              functionsPlanName=${{ vars.AZURE_FUNCTIONS_PLAN }} \
-              insightsName=${{ vars.AZURE_APPLICATION_INSIGHTS }} \
-              storageName=${{ vars.AZURE_STORAGE }} \
-              workspacesName=${{ vars.AZURE_WORKSPACES }}
+        uses: azure/arm-deploy@v2
+        with:
+          scope: resourcegroup
+          subscriptionId: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+          resourceGroupName: ${{ vars.AZURE_RESOURCE_GROUP }}
+          template: ./resources/storage-insights-functions-apiConn.bicep
+          parameters: >-
+            apiConnAzureblobName=${{ vars.AZURE_API_CONNECTION_AZUREBLOB }} \
+            apiConnOutlookName=${{ vars.AZURE_API_CONNECTION_OUTLOOK }} \
+            functionsName=${{ vars.AZURE_FUNCTIONS }} \
+            functionsPlanName=${{ vars.AZURE_FUNCTIONS_PLAN }} \
+            insightsName=${{ vars.AZURE_APPLICATION_INSIGHTS }} \
+            storageName=${{ vars.AZURE_STORAGE }} \
+            workspacesName=${{ vars.AZURE_WORKSPACES }}
 
   build-pages-and-functions-app:
     runs-on: ubuntu-latest
@@ -170,13 +172,15 @@ jobs:
           creds: '{"clientId":"${{ vars.AZURE_AD_SP_CONTRIBUTOR_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_AD_SP_CONTRIBUTOR_CLIENT_SECRET }}","subscriptionId":"${{ vars.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ vars.AZURE_TENANT_ID }}"}'
 
       - name: Deploy Azure Logic Apps
-        run: |
-          az deployment group create \
-            --resource-group ${{ vars.AZURE_RESOURCE_GROUP }} \
-            --template-file resources/logic-apps.bicep \
-            --parameters \
-              apiConnAzureblobName=${{ vars.AZURE_API_CONNECTION_AZUREBLOB }} \
-              apiConnOutlookName=${{ vars.AZURE_API_CONNECTION_OUTLOOK }} \
-              functionsName=${{ vars.AZURE_FUNCTIONS }} \
-              logicAppName=${{ vars.AZURE_LOGIC_APP }} \
-              storageName=${{ vars.AZURE_STORAGE }}
+        uses: azure/arm-deploy@v2
+        with:
+          scope: resourcegroup
+          subscriptionId: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+          resourceGroupName: ${{ vars.AZURE_RESOURCE_GROUP }}
+          template: ./resources/logic-apps.bicep
+          parameters: >-
+            apiConnAzureblobName=${{ vars.AZURE_API_CONNECTION_AZUREBLOB }} \
+            apiConnOutlookName=${{ vars.AZURE_API_CONNECTION_OUTLOOK }} \
+            functionsName=${{ vars.AZURE_FUNCTIONS }} \
+            logicAppName=${{ vars.AZURE_LOGIC_APP }} \
+            storageName=${{ vars.AZURE_STORAGE }}
