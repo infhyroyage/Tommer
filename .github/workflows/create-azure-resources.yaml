@@ -51,12 +51,12 @@ jobs:
           resourceGroupName: ${{ vars.AZURE_RESOURCE_GROUP }}
           template: ./resources/storage-insights-functions-apiConn.bicep
           parameters: >-
-            apiConnAzureblobName=${{ vars.AZURE_API_CONNECTION_AZUREBLOB }} \
-            apiConnOutlookName=${{ vars.AZURE_API_CONNECTION_OUTLOOK }} \
-            functionsName=${{ vars.AZURE_FUNCTIONS }} \
-            functionsPlanName=${{ vars.AZURE_FUNCTIONS_PLAN }} \
-            insightsName=${{ vars.AZURE_APPLICATION_INSIGHTS }} \
-            storageName=${{ vars.AZURE_STORAGE }} \
+            apiConnAzureblobName=${{ vars.AZURE_API_CONNECTION_AZUREBLOB }}
+            apiConnOutlookName=${{ vars.AZURE_API_CONNECTION_OUTLOOK }}
+            functionsName=${{ vars.AZURE_FUNCTIONS }}
+            functionsPlanName=${{ vars.AZURE_FUNCTIONS_PLAN }}
+            insightsName=${{ vars.AZURE_APPLICATION_INSIGHTS }}
+            storageName=${{ vars.AZURE_STORAGE }}
             workspacesName=${{ vars.AZURE_WORKSPACES }}
 
   build-pages-and-functions-app:
@@ -179,8 +179,8 @@ jobs:
           resourceGroupName: ${{ vars.AZURE_RESOURCE_GROUP }}
           template: ./resources/logic-apps.bicep
           parameters: >-
-            apiConnAzureblobName=${{ vars.AZURE_API_CONNECTION_AZUREBLOB }} \
-            apiConnOutlookName=${{ vars.AZURE_API_CONNECTION_OUTLOOK }} \
-            functionsName=${{ vars.AZURE_FUNCTIONS }} \
-            logicAppName=${{ vars.AZURE_LOGIC_APP }} \
+            apiConnAzureblobName=${{ vars.AZURE_API_CONNECTION_AZUREBLOB }}
+            apiConnOutlookName=${{ vars.AZURE_API_CONNECTION_OUTLOOK }}
+            functionsName=${{ vars.AZURE_FUNCTIONS }}
+            logicAppName=${{ vars.AZURE_LOGIC_APP }}
             storageName=${{ vars.AZURE_STORAGE }}
