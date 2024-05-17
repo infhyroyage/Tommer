@@ -9,7 +9,7 @@
     "start": "func start --verbose",
     "test": "vitest",
     "watch": "tsc -w",
-    "lint": "eslint '**/*.{ts,tsx}'"
+    "lint": "eslint"
   },
   "dependencies": {
     "@azure/functions": "^4.4.0",

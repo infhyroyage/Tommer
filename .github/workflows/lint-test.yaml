@@ -34,7 +34,6 @@ jobs:
       - name: Lint Typescript
         uses: reviewdog/action-eslint@v1
         with:
-          eslint_flags: "**/*.{ts,tsx}"
           fail_on_error: true
           filter_mode: file
           level: warning
