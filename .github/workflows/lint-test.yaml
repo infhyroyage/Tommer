@@ -31,23 +31,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node ${{ env.NODE_VERSION }} Environment
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: npm
-
-      - name: Restore cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-tommer-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
-          restore-keys: ${{ runner.os }}-tommer-${{ hashFiles('**/package-lock.json') }}-
-
       - name: Lint Typescript
         uses: reviewdog/action-eslint@v1
         with:
-          eslint_flags: "**/*.{ts,tsx}"
           fail_on_error: true
           filter_mode: file
           level: warning
